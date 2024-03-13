@@ -1,0 +1,18 @@
+/* GLOBAL */
+* {
+    margin: 0;
+    padding: 0;
+}
+body {
+    height: 100%;
+    min-height: 100vh;
+    display: flex;
+}
+footer {
+    border-top: solid 1px;
+    min-height: 50px;
+    width: 100%;
+}
+.logoContainer {
+    
+}
