@@ -7,27 +7,33 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="logoContainer">
-        <img src="" alt="" id="logo">
+    <div class="signupHeader">
+        <div class="logoContainer">
+            <img src="img/icon.png" alt="" id="logo">
+        </div>
+        <div class="titleHeader">   
+            <p>Office Anywhere</p>
+        </div>
     </div>
-    <div class="titleHeader">   
-        <p>Office Anywhere</p>
+    
+    <div class="pageBody">
+        <div class="signupBox">
+            <button name="coworkerSignupButton" id="coworkerSignupButton">Sign up as a coworker</button>
+            <input type="text" name="coworkerSignupUsername" id="coworkerSignupUsername" placeholder="Username">
+            <input type="text" name="coworkerSignupEmail" id="coworkerSignupEmail" placeholder="Email">
+            <input type="text" name="coworkerSignupPassword" id="coworkerSignupPassword" placeholder="Password">
+        </div>
+        <div class="signupBox">
+            <button name="coworkerSignupButton" id="coworkerSignupButton">Sign up as an owner</button>
+            <input type="text" name="ownerSignupUsername" id="ownerSignupUsername" placeholder="Username">
+            <input type="text" name="ownerSignupEmail" id="ownerSignupEmail" placeholder="Email">
+            <input type="text" name="ownerSignupPassword" id="ownerSignupPassword" placeholder="Password">
+        </div>
     </div>
-    <div class="signupBox">
-        <input type="button" name="coworkerSignupButton" id="coworkerSignupButton">
-        <input type="text" name="coworkerSignupUsername" id="coworkerSignupUsername" placeholder="Username">
-        <input type="text" name="coworkerSignupEmail" id="coworkerSignupEmail" placeholder="Email">
-        <input type="text" name="coworkerSignupPassword" id="coworkerSignupPassword" placeholder="Password">
-    </div>
-    <div class="signupBox">
-        <input type="button" name="ownerSignupButton" id="ownerSignupButton">
-        <input type="text" name="ownerSignupUsername" id="ownerSignupUsername" placeholder="Username">
-        <input type="text" name="ownerSignupEmail" id="ownerSignupEmail" placeholder="Email">
-        <input type="text" name="ownerSignupPassword" id="ownerSignupPassword" placeholder="Password">
-    </div>
+    
     <div class="haveAnAccountBar">
         <p>Already have an account? Log in <a href="">here</a></p>
-        <input type="button" name="login">
+        <button id="goToLoginBtn">Log in</button>
     </div>  
 
     <footer>
