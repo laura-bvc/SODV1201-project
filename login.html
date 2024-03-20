@@ -7,20 +7,26 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="logoContainer">
-        <img src="" alt="" id="logo">
+    <div class="signupHeader">
+        <div class="logoContainer">
+            <img src="img/icon.png" alt="" id="logo">
+        </div>
+        <div class="titleHeader">   
+            <p>Office Anywhere</p>
+        </div>
     </div>
-    <div class="titleHeader">   
-        <p>Office Anywhere</p>
+
+    <div class="pageBody">
+        <div class="signupBox">
+            <input type="text" name="loginUsername" id="loginUsername" placeholder="Username">
+            <input type="text" name="loginPassword" id="loginPassword" placeholder="Password">
+            <button id="loginButton">Log in</button>
+        </div>
     </div>
-    <div class="signupBox">
-        <input type="button" name="loginButton" id="loginButton">
-        <input type="text" name="loginUsername" id="loginUsername" placeholder="Username">
-        <input type="text" name="loginPassword" id="loginPassword" placeholder="Password">
-    </div>
+    
     <div class="haveAnAccountBar">
         <p>Don't have an account? Sign up <a href="">here</a></p>
-        <input type="button" name="signup">
+        <button id="goToSignupBtn"></button>
     </div>
 
     <footer>
