@@ -68,7 +68,7 @@ footer {
     margin: 10px;
     border: 1px solid;
 }
-.propertyBox, .propertyBoxAdd {
+.propertyBox {
     height: 250px;
     width: 30%;
     border: 1px solid;
