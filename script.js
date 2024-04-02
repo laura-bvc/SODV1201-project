@@ -56,12 +56,29 @@ const all_users=[];
 
 const arr_wk = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
+var all_users_db = [
+	{
+		userID: 1,
+		userType: "coworker",
+		username: "coworker1",
+		password: "456456",
+		email: "coworker1@123.com"
+	},
+	{
+		userID: 2,
+		userType: "owner",
+		username: "testuser1",
+		password: "123123",
+		email: "testuser1@123.com"
+	}];
 
 $(document).ready(function(){
 	
 // setup searchButton onclick
 	if ($("#searchButton").length ) {
 		$("#searchButton").click(function() {
+			
+			window.alert("search");
 			// check if user is login
 				if ($(".profileSquare").length ) {
 					// user loged in
@@ -310,7 +327,179 @@ $(document).ready(function(){
 				window.location.href='ownerAllProperties.html?userid=' + user_ID;
 		});	
 	}
+	
+	// index.html
+	// ************* map workspace data to index.html property boxes *************
+	// use data in all_workspace array to populate properties container
+	else if ($(".div_index").length) {
+	window.alert("in index.html");
+	function addPropertyBoxes() {
+		all_workspace.forEach(function(workspace) {
+			var propertyBox = $("<div>").addClass("propertyBox");
+			var title = $("<p>").text(workspace.title);
+			var propertyImgBox = $("<div>").addClass("propertyImgBox");
+			var image = $("<p>").text("image");
+			var location = $("<p>").text("Location: " + workspace.location);
+			var desc = $("<p>").text("Description: " + workspace.desc);
+			var capacity = $("<p>").text("Capacity: " + workspace.capacity);
 
+			propertyBox.append(title);
+			propertyBox.append(propertyImgBox);
+			propertyImgBox.append(image);
+			propertyBox.append(location);
+			propertyBox.append(desc);
+			propertyBox.append(capacity);
+
+			$(".propertiesContainer").append(propertyBox);
+			propertyBox.children().wrapAll("<a href='login.html'></a>");
+		});
+	}
+	addPropertyBoxes();
+	}
+	
+	
+	// signup.html 
+	// ************* store signup data to array all_users_db *************
+	else if ($(".signupButton").length) {
+		window.alert("in signup.html");
+	function addUser(userType) {
+		
+		var username;
+		var email;
+		var password;
+		var nextURL="#";
+		var userID = all_users_db.length + 1
+		
+		if(userType === 'coworker')
+		{
+			username = $("#coworkerSignupUsername").val();
+			email = $("#coworkerSignupEmail").val();
+			password = $("#coworkerSignupPassword").val();
+			nextURL = "coworker_search.html?userid=" + userID + "&search=";
+		}
+		else if(userType === 'owner')
+		{
+			username = $("#ownerSignupUsername").val();
+			email = $("#ownerSignupEmail").val();
+			password = $("#ownerSignupPassword").val();
+			nextURL = "ownerAllProperties.html?userid=" + userID;
+		}
+
+		//push user data to array
+		all_users_db.push({
+			userID: userID,
+			userType: userType,
+			username: username,
+			email: email,
+			password: password
+		});
+		
+		window.alert("User '" + userID +"' signed up as " + userType + " sucessfully.");
+		window.location.href=nextURL;
+		
+	}
+	// function uses button click to determine 'coworker' or 'owner' userType
+	// and adds userType to database
+	$(".signupButton").click(function(){
+		var userType = $(this).data("type");
+		addUser(userType);
+		
+	})
+	
+	}
+	
+	// login.html 
+	// ************* login functionality *************
+	else if ($("#loginButton").length) {
+		window.alert("in login.html");
+		
+	$("#loginButton").click(function() {
+		var loginUsername = $("#loginUsername").val();
+		var loginPassword = $("#loginPassword").val();
+
+		// find user in all_users_db
+		var user = all_users_db.find(function(u){
+			return u.username === loginUsername && u.password === loginPassword;
+		})
+
+		if(user)
+		{
+			// successful login
+			$("#loginMessage").text("Login successful!");
+
+			// redirect owner to their AllProperties page
+			if(user.userType === "owner")
+			{
+				window.location.href = "ownerAllProperties.html?userid=" + user.userID;
+			}
+			// or redirect coworker to coworker_search page
+			else if(user.userType === "coworker")
+			{
+				window.location.href = "coworker_search.html?userid=" + user.userID + "&search=";
+			}
+		}
+		else
+		{
+			$("#loginMessage").text("Error! Username not found.");
+		}
+	})
+	}
+
+	
+	// ownerAllProperties.html 
+	// ************* show owner properties on login *************
+	// show owner's properties
+	else if ($(".propertyBoxAdd").length) {
+		window.alert("in ownerAllProperties.html");
+
+	const params = new URLSearchParams(window.location.search);
+	let user_ID = parseInt(params.get('userid'));
+	
+	if (!disp_user(user_ID))
+	{
+		$(".propertiesContainer").prepend("<div><a href='login.html'>Login to book workspace</a></div>");
+		$(".propertiesContainer").prepend("<h2>You are not logged in</h2>");
+	}
+	else
+	{
+		addOwnerPropertyBoxes();
+	}
+		
+	// use data in all_workspace array to populate properties container
+	function addOwnerPropertyBoxes() {
+		// filter workspaces by owner userID
+		var userWorkspaces = all_workspace.filter(function(workspace){
+			return workspace.owner === user_ID;
+		})
+
+		userWorkspaces.forEach(function(workspace) {
+			var propertyBox = $("<div>").addClass("propertyBox");
+			var title = $("<p>").text(workspace.title);
+			var propertyImgBox = $("<div>").addClass("propertyImgBox");
+			var image = $("<p>").text("image");
+			var location = $("<p>").text("Location: " + workspace.location);
+			var desc = $("<p>").text("Description: " + workspace.desc);
+			var capacity = $("<p>").text("Capacity: " + workspace.capacity);
+
+			propertyBox.append(title);
+			propertyBox.append(propertyImgBox);
+			propertyImgBox.append(image);
+			propertyBox.append(location);
+			propertyBox.append(desc);
+			propertyBox.append(capacity);
+
+			$(".propertiesContainer").append(propertyBox);
+		});
+	}
+	
+
+
+	// redirect user to add/edit workspace
+		$(".propertyBoxAdd").click(function() {
+			window.location.href = "owner_add.html?userid="+user_ID;
+	})
+	
+	}
 
 });	
 
@@ -320,10 +509,10 @@ function disp_user(userid) {
 	
 	if(isNaN(userid) )
 	{
-		$("#home_content").children().hide();
+		$("#home_content, .propertiesContainer").children().hide();
 		return false;
 	}
-	$("#user").text("User ID: " + userid);
+	$("#user, #profileText").text("User ID: " + userid);
 	return true;
 }
 
@@ -396,181 +585,3 @@ function ws_search(search_arr, userid)
 		
 	}
 }
-
-// index.html
-// ************* map workspace data to index.html property boxes *************
-$(document).ready(function() {
-	// use data in all_workspace array to populate properties container
-	function addPropertyBoxes() {
-		all_workspace.forEach(function(workspace) {
-			var propertyBox = $("<div>").addClass("propertyBox");
-			var title = $("<p>").text(workspace.title);
-			var propertyImgBox = $("<div>").addClass("propertyImgBox");
-			var image = $("<p>").text("image");
-			var location = $("<p>").text("Location: " + workspace.location);
-			var desc = $("<p>").text("Description: " + workspace.desc);
-			var capacity = $("<p>").text("Capacity: " + workspace.capacity);
-
-			propertyBox.append(title);
-			propertyBox.append(propertyImgBox);
-			propertyImgBox.append(image);
-			propertyBox.append(location);
-			propertyBox.append(desc);
-			propertyBox.append(capacity);
-
-			$(".propertiesContainer").append(propertyBox);
-		});
-	}
-	addPropertyBoxes();
-})
-
-// signup.html 
-// ************* store signup data to array all_users_db *************
-$(document).ready(function(){
-	var all_users_db = [
-		{
-			userID: 1,
-			userType: "coworker",
-			username: "coworker1",
-			password: "456456",
-			email: "coworker1@123.com"
-		},
-		{
-			userID: 2,
-			userType: "owner",
-			username: "testuser1",
-			password: "123123",
-			email: "testuser1@123.com"
-		},
-	];
-
-	function addUser(userType) {
-		var usernameField;
-		var emailField;
-		var passwordField;
-		if(userType === 'coworker')
-		{
-			usernameField = $("#coworkerSignupUsername");
-			emailField = $("#coworkerSignupEmail");
-			passwordField = $("#coworkerSignupPassword");
-		}
-		else if(userType === 'owner')
-		{
-			usernameField = $("#ownerSignupUsername");
-			emailField = $("#ownerSignupEmail");
-			passwordField = $("#ownerSignupPassword");
-		}
-
-		var userID = all_users_db.length - 1
-		var username = usernameField.val();
-		var email = emailField.val();
-		var password = passwordField.val();
-
-		//push user data to array
-		all_users_db.push({
-			userID: userID,
-			userType: userType,
-			username: username,
-			email: email,
-			password: password
-		});
-	}
-	// function uses button click to determine 'coworker' or 'owner' userType
-	// and adds userType to database
-	$(".signupButton").click(function(){
-		var userType = $(this).data("type");
-		addUser(userType);
-	})
-})
-
-// login.html 
-// ************* login functionality *************
-$(document).ready(function() {
-	var all_users_db = [
-		{
-			userID: 1,
-			userType: "coworker",
-			username: "coworker1",
-			password: "456456",
-			email: "coworker1@123.com"
-		},
-		{
-			userID: 2,
-			userType: "owner",
-			username: "testuser1",
-			password: "123123",
-			email: "testuser1@123.com"
-		},
-	];
-
-	$("#loginButton").click(function() {
-		var loginUsername = $("#loginUsername").val();
-		var loginPassword = $("#loginPassword").val();
-
-		// find user in all_users_db
-		var user = all_users_db.find(function(u){
-			return u.username === loginUsername && u.password === loginPassword;
-		})
-
-		if(user)
-		{
-			// successful login
-			$("#loginMessage").text("Login successful!");
-
-			// redirect owner to their AllProperties page
-			if(user.userType === "owner")
-			{
-				window.location.href = "ownerAllProperties.html?username=" + user.username;
-			}
-			// or redirect coworker to coworker_search page
-			else if(user.userType === "coworker")
-			{
-				window.location.href = "coworker_search.html?userid=int";
-			}
-		}
-		else
-		{
-			$("#loginMessage").text("Error! Username not found.");
-		}
-	})
-})
-
-// ownerAllProperties.html 
-// ************* show owner properties on login *************
-// show owner's properties
-$(document).ready(function() {
-	// use data in all_workspace array to populate properties container
-	function addOwnerPropertyBoxes() {
-		// filter workspaces by owner userID
-		var userWorkspaces = all_workspace.filter(function(workspace){
-			return workspace.owner === userID;
-		})
-
-		userWorkspaces.forEach(function(workspace) {
-			var propertyBox = $("<div>").addClass("propertyBox");
-			var title = $("<p>").text(workspace.title);
-			var propertyImgBox = $("<div>").addClass("propertyImgBox");
-			var image = $("<p>").text("image");
-			var location = $("<p>").text("Location: " + workspace.location);
-			var desc = $("<p>").text("Description: " + workspace.desc);
-			var capacity = $("<p>").text("Capacity: " + workspace.capacity);
-
-			propertyBox.append(title);
-			propertyBox.append(propertyImgBox);
-			propertyImgBox.append(image);
-			propertyBox.append(location);
-			propertyBox.append(desc);
-			propertyBox.append(capacity);
-
-			$(".propertiesContainer").append(propertyBox);
-		});
-	}
-	addOwnerPropertyBoxes();
-})
-
-// redirect user to add/edit workspace
-$(document).ready(function() {
-	$(".propertyBoxAdd").click(function() {
-		window.location.href = "owner_add.html?userid=int";
-	})
-})
