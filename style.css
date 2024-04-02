@@ -2,7 +2,6 @@
 * {
     margin: 0;
     padding: 0;
-    font-family: Arial, Helvetica, sans-serif;
 }
 body {
     height: 100%;
@@ -10,65 +9,48 @@ body {
     display: flex;
     flex-direction: column;
 }
+.spacer {
+    height: 55vh;
+}
 footer {
-    width: 100%;
-    height: 5vh;
     border-top: solid 1px;
+    min-height: 25px;
+    width: 100%;
 }
 
 
 /* HOME */
 .homepageHeader {
     display: flex;
-    margin: 0px 25px;
-    width: 100%;
-    height: 10vh;
+    margin: 10px;
 }
-.logoContainer {
-    margin: 10px 0px 10px 50px;
+/* .logoContainer {
+    border: 1px solid;
     width: 100px;
 } 
 .logoContainer img{
     width: 80px;
-}
-.titleHeader{
-    display: flex;
-    width: 300px;
-    align-items: center;
-}
-.titleHeader a {
-    font-size: 20px;
-    font-weight: bold;
-    text-decoration: none;
-    color: #fc3d03;
-    padding-left: 10px;
-}
+} */
 .searchBarHeader {
     display: flex;
+    border: 1px solid;
     width: 100%;
-    align-items: flex-end;
-    justify-content: center;
+    align-items: center;
 }
 .searchBar {
     margin-left: 15px;
-    width: 300px;
+    width: 80%;
     height: 40px;
-    border: 1px solid gray;
-    border-radius: 15px;
 }
 #searchButton {
     margin-left: 10px;
-    width: 80px;
+    width: 100px;
     height: 40px;
-    border: 1px solid ;
-    border-radius: 15px;
-    background-color: #fc3d03;
-    color: white;
 }
 .homeSignupLoginSquare {
+    border: 1px solid;
     display: flex;
     flex-direction: column;
-    margin: 10px 50px 10px 0px;
     width: 100px;
     justify-content: center;
     align-items: center;
@@ -80,26 +62,20 @@ footer {
     margin: 5px;
 }
 .propertiesContainer {
-    width: 100%;
-    height: 80vh;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     margin: 10px;
-    /* border: 1px solid; */
+    border: 1px solid;
 }
 .propertyBox, .propertyBoxAdd {
     height: 250px;
-    width: 300px;
+    width: 30%;
     border: 1px solid;
-    border-radius: 25px;
-    margin: 15px;
+    margin: 5px;
     display: flex;
     flex-direction: column;
     align-items: center;
-}
-.propertyBoxAdd img {
-    width: 70%;
 }
 .propertyImgBox {
     height: 100px;
@@ -113,19 +89,31 @@ footer {
     display: flex;
     margin: 10px;
 }
+.logoContainer {
+    border: 1px solid;
+    width: 100px;
+}
+.logoContainer img{
+    width: 80px;
+}
+.titleHeader{
+    display: flex;
+    border: 1px solid;
+    width: 100%;
+    align-items: center;
+}
+.titleHeader p {
+    font-size: 24px;
+    font-weight: bold;
+    padding-left: 10px;
+}
 /* BODY */
 .pageBody {
     display: flex;
-    flex-direction: column;
     width: 100%;
-    height: 80vh;
+    height: 60%;
     justify-content: center;
     margin-top: 30px;
-}
-.signupBoxContainer {
-    display: flex;
-    height: 350px;
-    justify-content: center;
 }
 .signupBox {
     display: flex;
@@ -134,7 +122,7 @@ footer {
     border: 1px solid;
     margin: 5px 10px;
     width: 200px;
-    height: 300px;
+    height: 200px;
 }
 .signupBox button {
     margin: 5px;
@@ -144,8 +132,7 @@ footer {
 }
 .haveAnAccountBar {
     border: 1px solid;
-    width: 80%;
-    height: 40px;
+    width: 50%;
     margin: 10px auto;
     display: flex;
     justify-content: center;
@@ -159,6 +146,29 @@ footer {
     display: flex;
     margin: 10px;
 }
+/* .logoContainer {
+    border: 1px solid;
+    width: 100px;
+} 
+.logoContainer img{
+    width: 80px;
+}
+.searchBarHeader {
+    display: flex;
+    border: 1px solid;
+    width: 100%;
+    align-items: center;
+}
+.searchBar {
+    margin-left: 15px;
+    width: 80%;
+    height: 40px;
+}
+#searchButton {
+    margin-left: 10px;
+    width: 100px;
+    height: 40px;
+}*/
 .profileSquare {
     border: 1px solid;
     display: flex;
