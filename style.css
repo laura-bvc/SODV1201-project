@@ -77,6 +77,11 @@ footer {
     flex-direction: column;
     align-items: center;
 }
+
+.propertyBoxAdd img {
+  width: 70%;
+}
+
 .propertyImgBox {
     height: 100px;
     width: 100px;
