@@ -118,7 +118,8 @@ $(document).ready(function(){
 				window.location.href='login.html?search=' + ($("#div_search").text()).slice(14);
 			});	
 		}
-	}
+	}	
+	
 
 // coworker_search.html
 // ************* redirect to coworker_booking with property ID *************
@@ -333,19 +334,22 @@ $(document).ready(function(){
 	// use data in all_workspace array to populate properties container
 	else if ($(".div_index").length) {
 	window.alert("in index.html");
+	
 	function addPropertyBoxes() {
 		all_workspace.forEach(function(workspace) {
 			var propertyBox = $("<div>").addClass("propertyBox");
-			var title = $("<p>").text(workspace.title);
-			var propertyImgBox = $("<div>").addClass("propertyImgBox");
-			var image = $("<p>").text("image");
-			var location = $("<p>").text("Location: " + workspace.location);
-			var desc = $("<p>").text("Description: " + workspace.desc);
-			var capacity = $("<p>").text("Capacity: " + workspace.capacity);
+			var title = $("<em>").text(workspace.title);
+			
+			//var propertyImgBox = $("<div>").addClass("propertyImgBox");
+			//var image = $("<div>").text("image");
+			var location = $("<div>").text("Location: " + workspace.location);
+			var desc = $("<div>").text("Description: " + workspace.desc);
+			var capacity = $("<div>").text("Capacity: " + workspace.capacity);
 
-			propertyBox.append(title);
-			propertyBox.append(propertyImgBox);
-			propertyImgBox.append(image);
+			propertyBox.append( title );
+			title.wrap("<div></div>");
+			//propertyBox.append(propertyImgBox);
+			//propertyImgBox.append(image);
 			propertyBox.append(location);
 			propertyBox.append(desc);
 			propertyBox.append(capacity);
@@ -355,6 +359,9 @@ $(document).ready(function(){
 		});
 	}
 	addPropertyBoxes();
+	
+
+
 	}
 	
 	
@@ -450,14 +457,14 @@ $(document).ready(function(){
 	// ************* show owner properties on login *************
 	// show owner's properties
 	else if ($(".propertyBoxAdd").length) {
-		window.alert("in ownerAllProperties.html");
-
+		window.alert("in ownerAllProperties.html");		
+		
 	const params = new URLSearchParams(window.location.search);
 	let user_ID = parseInt(params.get('userid'));
 	
 	if (!disp_user(user_ID))
 	{
-		$(".propertiesContainer").prepend("<div><a href='login.html'>Login to book workspace</a></div>");
+		$(".propertiesContainer").prepend("<div><a href='login.html'>Login to see your workspaces</a></div>");
 		$(".propertiesContainer").prepend("<h2>You are not logged in</h2>");
 	}
 	else
@@ -467,37 +474,36 @@ $(document).ready(function(){
 		
 	// use data in all_workspace array to populate properties container
 	function addOwnerPropertyBoxes() {
+		// add link to add new workspace
+		$(".propertyBoxAdd").wrapAll("<a href='owner_add.html?userid=" + user_ID + "&ws='></a>");
+		
+		
 		// filter workspaces by owner userID
 		var userWorkspaces = all_workspace.filter(function(workspace){
 			return workspace.owner === user_ID;
-		})
+		});
 
 		userWorkspaces.forEach(function(workspace) {
 			var propertyBox = $("<div>").addClass("propertyBox");
-			var title = $("<p>").text(workspace.title);
-			var propertyImgBox = $("<div>").addClass("propertyImgBox");
-			var image = $("<p>").text("image");
-			var location = $("<p>").text("Location: " + workspace.location);
-			var desc = $("<p>").text("Description: " + workspace.desc);
-			var capacity = $("<p>").text("Capacity: " + workspace.capacity);
+			var title = $("<em>").text(workspace.title);
+			//var propertyImgBox = $("<div>").addClass("propertyImgBox");
+			//var image = $("<div>").text("image");
+			var location = $("<div>").text("Location: " + workspace.location);
+			var desc = $("<div>").text("Description: " + workspace.desc);
+			var capacity = $("<div>").text("Capacity: " + workspace.capacity);
 
 			propertyBox.append(title);
-			propertyBox.append(propertyImgBox);
-			propertyImgBox.append(image);
+			title.wrap("<div></div>");
+			//propertyBox.append(propertyImgBox);
+			//propertyImgBox.append(image);
 			propertyBox.append(location);
 			propertyBox.append(desc);
 			propertyBox.append(capacity);
 
 			$(".propertiesContainer").append(propertyBox);
+			propertyBox.children().wrapAll("<a href='owner_add.html?userid=" + user_ID + "&ws=" + workspace.ID + "'></a>");
 		});
 	}
-	
-
-
-	// redirect user to add/edit workspace
-		$(".propertyBoxAdd").click(function() {
-			window.location.href = "owner_add.html?userid="+user_ID;
-	})
 	
 	}
 
@@ -512,7 +518,7 @@ function disp_user(userid) {
 		$("#home_content, .propertiesContainer").children().hide();
 		return false;
 	}
-	$("#user, #profileText").text("User ID: " + userid);
+	$("#user").text("User ID: " + userid);
 	return true;
 }
 
@@ -523,7 +529,6 @@ function ws_search(search_arr, userid)
 	const disp_ws = [];
 	
 	search_arr.forEach ( (txt) => {
-		console.log(txt);
 		all_workspace.forEach ( (ws) => {
 			if ( ws.title.toLowerCase().indexOf(txt) !=-1 || ws.desc.toLowerCase().indexOf(txt) !=-1  || 
 				ws.location.toLowerCase().indexOf(txt) !=-1  || ws.amenities.toLowerCase().indexOf(txt) !=-1  )
@@ -548,7 +553,7 @@ function ws_search(search_arr, userid)
 		$("#div_search").text("Search Terms: " + search_arr.join(", "));
 		
 		// display the workspaces
-		$(".div_wksp").remove();
+		$(".propertyBox").remove();
 		let button_txt = "";
 		if (userid)
 		{
@@ -564,8 +569,36 @@ function ws_search(search_arr, userid)
 		
 		disp_ws.forEach ( (ws) => {
 			
+			let propertyBox = $("<div>").addClass("propertyBox");
+			propertyBox.attr('id', 'ws' + ws.ID);
+			let title = $("<em>").text(ws.title);
+			
+			let location = $("<div>").text("Location: " + ws.location);
+			let desc = $("<div>").text("Description: " + ws.desc);
+			let capacity = $("<div>").text("Capacity: " + ws.capacity);
+			let amenities = $("<div>").text("Amenities: " + ws.amenities);
+			let temp_str = "Avaliability: ";
+				ws.avaliability.forEach( (wkday, index, arr) => {
+					temp_str+= arr_wk[wkday];
+					if (index < arr.length-1) {
+						temp_str += ", ";
+					}
+				});
+			let avaliability = $("<div>").text(temp_str);
+
+			propertyBox.append( title );
+			title.wrap("<div></div>");
+			propertyBox.append(location);
+			propertyBox.append(desc);
+			propertyBox.append(capacity);
+			propertyBox.append(amenities);
+			propertyBox.append(avaliability);
+
+			$(".propertiesContainer").append(propertyBox);
+			
+			/*
 			let temp_str = "";
-			temp_str = "<div class='div_wksp' id='ws" + ws.ID + "'><h2>" + 
+			temp_str = "<div class='propertyBox' id='ws" + ws.ID + "'><h2>" + 
 				ws.title + button_txt + "</h2>" +
 				"<ul><li>Location: " + ws.location + "</li>" +
 				"<ul><li>Description: " + ws.desc + "</li>" +
@@ -581,7 +614,34 @@ function ws_search(search_arr, userid)
 			temp_str += "</span></div>"
 			
 			$("#home_content").append(temp_str);
+			
+			*/
 		});
 		
 	}
 }
+
+	
+		function addPropertyBoxes() {
+		all_workspace.forEach(function(workspace) {
+			var propertyBox = $("<div>").addClass("propertyBox");
+			var title = $("<em>").text(workspace.title);
+			
+			//var propertyImgBox = $("<div>").addClass("propertyImgBox");
+			//var image = $("<div>").text("image");
+			var location = $("<div>").text("Location: " + workspace.location);
+			var desc = $("<div>").text("Description: " + workspace.desc);
+			var capacity = $("<div>").text("Capacity: " + workspace.capacity);
+
+			propertyBox.append( title );
+			title.wrap("<div></div>");
+			//propertyBox.append(propertyImgBox);
+			//propertyImgBox.append(image);
+			propertyBox.append(location);
+			propertyBox.append(desc);
+			propertyBox.append(capacity);
+
+			$(".propertiesContainer").append(propertyBox);
+			propertyBox.children().wrapAll("<a href='login.html'></a>");
+		});
+	}
