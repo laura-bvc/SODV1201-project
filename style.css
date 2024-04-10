@@ -1,92 +1,209 @@
+/**
+* @name: Project
+* @Course Code: SODV1201
+* @class: Software Development Diploma program.
+* @author: Laurainda Fan & Joey Pinaroc
+**/
+
 /* GLOBAL */
 * {
     margin: 0;
     padding: 0;
+	--bg-cream: #FDF4E3;
+	--bg-blue: #CDDEEE;
+	--bg-org: #FC3D03;
+	--title-txt: #FF8300;
 }
 body {
-    height: 100%;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+    font-family: 'Brush Script MT', 'Lucida Sans Typewriter', Helvetica, sans-serif;
+	background-color: var(--bg-cream);
+	color: grey;
 }
-footer {
-    width: 100%;
-    height: 5vh;
-    border-top: solid 1px;
+
+a {
+  color: grey;
+  text-decoration: none;
 }
-.hover:hover {
-    background-color: #fc5203;
+
+a:hover {
+  text-decoration: none;
+}
+
+a > div {
+	padding: 2vh 0;
 }
 
 
-/* HOME */
+/* "alt" text for link */
+.alt_box
+{
+  border: 1px solid var(--title-txt);
+  position:absolute;
+  color: white;
+  background-color: var(--title-txt);
+}
+
+em
+{
+	border-bottom: 1px solid grey;
+	font-weight: bold;
+}
+
+/* Header */
 .homepageHeader {
-    display: flex;
-    margin: 10px;
+	position: relative;
+	width: 98vw;
+	height: 100px;
 }
+/*
+.homepageHeader:after {
+	display: table;
+	clear: both;
+}
+*/
+
 .logoContainer {
-    margin: 10px 0px 10px 50px;
-    width: 100px;
+	position: absolute;
+	left: 0;
+	padding: 15px;
+	width: 100px;
 } 
 .logoContainer img{
-    width: 80px;
+    width: 100%;
 }
 .titleHeader{
-    display: flex;
-    width: 300px;
-    align-items: center;
+	position: absolute;
+	left: 130px;
+	top: 40px;
+
 }
 .titleHeader a {
-    font-size: 20px;
+    font-size: 2em;
     font-weight: bold;
     text-decoration: none;
-    color: #fc3d03;
-    padding-left: 10px;
+    color: var(--title-txt);
 }
 .searchBarHeader {
-    display: flex;
-    width: 100%;
-    align-items: flex-end;
-    justify-content: center;
+	position: absolute;
+	top: 28px;
+	right: 10vw;
+    text-align: right;
+	padding: 1.5vw;
+	width: 300px;
+	display: flex;
 }
 .searchBar {
-    margin-left: 15px;
-    width: 300px;
-    height: 40px;
-    border: 1px solid gray;
-    border-radius: 15px;
+	width: 100%;
+	border: 3px solid var(--title-txt);
+	border-right: none;
+	padding: 5px;
+	height: 21px;
+	border-radius: 5px 0 0 5px;
+	outline: none;
+	color: #9DBFAF;
 }
+.searchBar:focus{
+  color: var(--title-txt);
+}
+
 #searchButton {
-    margin-left: 10px;
-    width: 80px;
-    height: 40px;
-    border: 1px solid ;
-    border-radius: 15px;
-    background-color: #fc3d03;
-    color: white;
+	width: 40px;
+	height: 36px;
+	border: 2px solid var(--title-txt);
+	background: var(--title-txt);
+	text-align: center;
+	color: white;
+	border-radius: 0 5px 5px 0;
+	cursor: pointer;
+	font-size: 20px;
 }
+
+/* hover text button for header  */
+.hover {
+	border: 2px solid grey;
+	background-color: var(--title-txt);
+	color: black;
+	border-radius: 15px;
+	text-align: center;
+	white-space: nowrap;
+	padding: 1vh 1vw;
+	font-weight: bold;
+	text-decoration: none;
+	font-size: 2vh;
+	margin: 5px;
+}
+
+.hover:hover {
+	border: 2px solid var(--title-txt);
+	background-color: var(--bg-cream);
+	color: var(--title-txt);
+}
+.hover > a:link, .hover > a:visited {
+	text-decoration: none;
+	color: black;
+}
+
+.hover > a:hover {
+	color: var(--title-txt);
+}
+
+/* header sign up & login button */
 .homeSignupLoginSquare {
-    display: flex;
-    flex-direction: column;
-    margin: 10px 50px 10px 0px;
-    width: 100px;
-    justify-content: center;
-    align-items: center;
+	position: absolute;
+	top: 0;
+	right: 0;
+    padding: 15px;
+	height: 5vw;
 }
+
 .homeSignupLoginSquare > a {
-    border: 1px solid;
-    width: 60px;
-    text-align: center;
-    margin: 5px;
+    width: 8vw;
+	height: 2vh;
 }
+
+.profileSquare {
+	position: absolute;
+	top: 0;
+	right: 0;
+	padding: 15px;
+	margin-top: 15px;
+	height: 3vw;
+    border: 1px solid;
+	border-radius: 25px;
+	font-weight: bold;
+	color: var(--title-txt);
+}
+
+
+/* footer & content positioning */
+footer {
+	position: fixed;
+	bottom: 0;
+    height: 4vh;
+	width: 100vw;
+	padding: 1vh 0;
+	background-color: var(--title-txt);
+	color: white;
+}
+#copyright {
+	position: absolute;
+	left: 15px;
+}
+
+#support {
+	position: absolute;
+	right: 15px;
+}
+
+
+/* property container - index.html*/
+
 .propertiesContainer {
-    width: 100%;
-    height: 80vh;
+    width: 80vw;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     margin: 10px;
-    /* border: 1px solid; */
 }
 .propertyBox, .propertyBoxAdd {
     height: 250px;
@@ -97,78 +214,76 @@ footer {
     display: flex;
     flex-direction: column;
     align-items: center;
+	padding: 0;
 }
 
 .propertyBoxAdd img {
-  width: 70%;
+  width: 60%;
+}
+
+.propertyBoxAdd em {
+  margin: 2vh 0;
 }
 
 .propertyImgBox {
+	/* not in use */
     height: 100px;
     width: 100px;
     border: 1px solid black;
 }
 
-/* LOGIN/SIGNUP PAGES */
-/* HEADER */
-.signupHeader {
-    display: flex;
-    margin: 10px;
+h3 {
+	padding-top: 5vh;
 }
-/* BODY */
-.pageBody {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 80vh;
-    justify-content: center;
-    margin-top: 30px;
-}
+
+
+/* login.html & signup.html */
+
 .signupBoxContainer {
     display: flex;
-    height: 350px;
+    height: 60vh;
+	margin: 0 15vw;
     justify-content: center;
 }
+
 .signupBox {
     display: flex;
     flex-direction: column;
     justify-content: center;
     border: 1px solid;
-    margin: 5px 10px;
-    width: 200px;
+    margin: 10vh auto 5vh auto;
+    width: 300px;
     height: 300px;
 }
-.signupBox button {
-    margin: 5px;
+#loginButton {
+	font-family: 'Brush Script MT', 'Lucida Sans Typewriter', Helvetica, sans-serif;
+    margin: 15px 80px;
+	text-align: center;
 }
+
+.signupButton {
+	font-family: 'Brush Script MT', 'Lucida Sans Typewriter', Helvetica, sans-serif;
+	width: 200px;
+	margin: 2vh 50px;
+}
+
 .signupBox input {
-    margin: 5px 10px;
+    margin: 10px 15px;
+	padding: 5px;
 }
 .haveAnAccountBar {
     border: 1px solid;
     width: 80%;
-    height: 40px;
+    height: 6vh;
     margin: 10px auto;
-    display: flex;
-    justify-content: center;
 }
-.haveAnAccountBar p {
-    margin-right: 10px;
+.haveAnAccountBar div {
+	width: 300px;
+    margin: 2vh auto;
 }
 
-/* OWNER ALL PROPERTIES PAGE */
-.homepageHeader {
-    display: flex;
-    margin: 10px;
-}
-.profileSquare {
-    border: 1px solid;
-    display: flex;
-    flex-direction: column;
-    width: 100px;
-    justify-content: center;
-    align-items: center;
-}
-.profileSquare img {
-    width: 35px;
+.haveAnAccountBar a {
+	border-radius: 13px;
+	padding: 5px;
+	margin: 0;
 }
