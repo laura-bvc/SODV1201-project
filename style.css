@@ -207,23 +207,17 @@ footer {
 }
 .propertyBox, .propertyBoxAdd {
     height: 250px;
-    width: 300px;
+    width: 260px;
     border: 1px solid;
     border-radius: 25px;
     margin: 15px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-	padding: 0;
+	padding: 2vh 2vw 2vh 4vw;
 }
 
 .propertyBoxAdd img {
   width: 60%;
 }
 
-.propertyBoxAdd em {
-  margin: 2vh 0;
-}
 
 .propertyImgBox {
 	/* not in use */
@@ -233,7 +227,7 @@ footer {
 }
 
 h3 {
-	padding-top: 5vh;
+	padding: 5vh 2vw 0 2vw;
 }
 
 
@@ -286,4 +280,22 @@ h3 {
 	border-radius: 13px;
 	padding: 5px;
 	margin: 0;
+}
+
+.booking {
+	height: 58vh;
+}
+
+.booking div , .edit_ws div {
+	padding: 2vh 0;
+}
+
+.edit_ws {
+	height: 58vh;
+	width: 70vw;
+}
+.edit_ws input , textarea{
+	font-family: 'Brush Script MT', 'Lucida Sans Typewriter', Helvetica, sans-serif;
+	padding: 5px;
+	border-radius: 10px;
 }

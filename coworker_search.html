@@ -4,59 +4,54 @@
 /**
 * @name: Project
 * @Course Code: SODV1201
-* @class: Software Development Diploma program
-* @author: Laurainda Fan
+* @class: Software Development Diploma program.
+* @author: Laurainda Fan & Joey Pinaroc
 **/
 -->
 
-<html>
-	
-	<head>
-		<title>Saved Search ~ Work Anywhere</title>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Saved Search ~ Office Anywhere</title>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 	</head>
 	
 	<body>
 
-		<div class ="homepageHeader">
-		<div class = "logoContainer">
-			<a class = "icon" href= "index.html">
-				<img src="img/icon.png">
-			</a>
-		</div>
 
-		<div class = "searchBarHeader">
-			<input type="text" placeholder="Search shared workspace" class="searchBar">
-			<input type="button" id="searchButton" value="Search">
-		</div>
-		
-		<div class = "profileSquare">
-			<a href = "#"  id="user">User Name</a>
+	<div class="homepageHeader">
+        <div class="logoContainer">
+            <a href="index.html"><img src="img/icon.png" alt="" id="logo"></a>
+        </div>
+        <div class="titleHeader">   
+            <a href="index.html"><p>Office Anywhere</p></a>
+        </div>
+        <div class="searchBarHeader">
+            <input type="text" placeholder="Search shared workspace" class="searchBar" id="searchBar">
+            <button id="searchButton">&#x1F50E;&#xFE0E;</button>
+        </div>
+		<div class="profileSquare">
+			<a href = "#"  id="user">User ID</a>
 			<!--  <a href = "recent.html"> Recent Bookings</a> -->
-		</div>
-		</div>
+        </div>
+    </div>
 		
 		<div id="home_content" class="div_main">
-			<div id="div_search">Search Terms: Term1, Term2, Term3
-			</div>
-			<div class="div_wksp" id="ws1">
-				<h2>Workspace 1 <input type="button" class="button_to_book" value="See details & Book"></h2>
-				<ul>
-					<li>Highlight 1</li>
-					<li>Highlight 2</li>
-					<li>Highlight 3</li>
-				</ul>
-				<div>Avaliability: Monday only</div>
-
+			<h3 id="div_search">Search Terms: Term1, Term2, Term3
+			</h3>
+			<div class="propertiesContainer">
+			<div class="propertyBox booking">
+				<input type="button" class="button_to_book" value="See details & Book">
 			</div>
 			
 		</div>
 
-		<div id="footer">
-			<div> © Copyright 2024 Work Anywhere</div>
-			<div> Contact our Support: 1-800-CALL-NOW</div>
-
-		</div>
+    <footer>
+        <div id="copyright">© Copyright 2024 Office Anywhere</div>
+        <div id="support">Contact Our Support: 1-800-CALL-NOW</div>
+    </footer>
+	
 		<link rel="stylesheet" href="style.css">
 		<script src="script.js"></script>		
 	</body>

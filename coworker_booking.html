@@ -4,45 +4,52 @@
 /**
 * @name: Project
 * @Course Code: SODV1201
-* @class: Software Development Diploma program
-* @author: Laurainda Fan
+* @class: Software Development Diploma program.
+* @author: Laurainda Fan & Joey Pinaroc
 **/
 -->
 
-<html>
-	
-	<head>
-		<title>Book a Workspace ~ Work Anywhere</title>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Book a Workspace ~ Office Anywhere</title>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 	</head>
 	
 	<body>
-		
-		<div class ="homepageHeader">
-		<div class = "logoContainer">
-			<a class = "icon" href= "index.html">
-				<img src="img/icon.png">
-			</a>
-		</div>
-		<div class = "searchBarHeader">
-		</div>
-		
-		<div class = "profileSquare">
-			<a href = "#" id="user">User Name</a>
+	
+	<div class="homepageHeader">
+        <div class="logoContainer">
+            <a href="index.html"><img src="img/icon.png" alt="" id="logo"></a>
+        </div>
+        <div class="titleHeader">   
+            <a href="index.html"><p>Office Anywhere</p></a>
+        </div>
+        <div class="searchBarHeader">
+            <input type="text" placeholder="Search shared workspace" class="searchBar" id="searchBar">
+            <button id="searchButton">&#x1F50E;&#xFE0E;</button>
+        </div>
+		<div class="profileSquare">
+			<a href = "#" id="user">User ID</a><br>
 			<a href = "coworker_search.html">Saved Search</a>
 			<!--  <a href = "recent.html"> Recent Bookings</a> -->
-		</div>
-		</div>
+        </div>
+    </div>
 		
 		<div id="home_content" class="div_main">		
-			<input type="button" id="button_book" value="Book">
+			<div class="propertiesContainer">
+			<div class="propertyBox booking">
+			<input type="button" id="button_book" class="hover" value="Book">
+			</div>
+			</div>
 		</div>
 
-		<div id="footer">
-			<p> © Copyright 2024 Work Anywhere
-			<p> Contact our Support: 1-800-CALL-NOW
-
-		</div>
+    <footer>
+        <div id="copyright">© Copyright 2024 Office Anywhere</div>
+        <div id="support">Contact Our Support: 1-800-CALL-NOW</div>
+    </footer>
+	
 		<link rel="stylesheet" href="style.css">
 		<script src="script.js"></script>		
 	</body>

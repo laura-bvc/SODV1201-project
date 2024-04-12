@@ -78,7 +78,6 @@ $(document).ready(function(){
 	if ($("#searchButton").length ) {
 		$("#searchButton").click(function() {
 			
-			window.alert("search");
 			// check if user is login
 				if ($(".profileSquare").length ) {
 					// user loged in
@@ -129,8 +128,10 @@ $(document).ready(function(){
 		const params = new URLSearchParams(window.location.search);
 		let user_ID = parseInt(params.get('userid'));
 		
+		
 		if (!disp_user(user_ID))
 		{
+			$("#home_content").children().hide();
 			$("#home_content").prepend("<div><a href='login.html'>Login to book workspace</a></div>");
 			$("#home_content").prepend("<h2>You are not logged in</h2>");
 		}
@@ -146,8 +147,8 @@ $(document).ready(function(){
 			ws_search( params.get('search').toLowerCase().split(/(?:,| )+/) , user_ID);
 			
 			$(".button_to_book").click(function(){
-				//******** pass property ID
-				window.location.href='coworker_booking.html?book=' + $(this).closest('div').attr('id').slice(2) + '&userid=' + user_ID;
+				//******** pass property ID from button
+				window.location.href='coworker_booking.html?book=' + $(this).val().slice(2) + '&userid=' + user_ID;
 			});	
 	}}
 	
@@ -162,35 +163,47 @@ $(document).ready(function(){
 		let book_ID = parseInt(params.get('book'));
 		let user_ID = parseInt(params.get('userid'));
 		let book_ws;
-		
 
 		if (!disp_user(user_ID))
 		{
-			$("#button_book").before("<h2>You are not logged in</h2>");
-			$("#button_book").before("<div><a href='login.html'>Login to book workspace</a></div>");
+			$("#home_content").children().hide();
+			$("#home_content").append("<h3>You are not logged in</h3>");
+			$("#home_content").append("<div><a href='login.html'>Login to book a workspace</a></div>");
 		}
 		else 
 		{		
+		$(".propertyBox").remove();
 		// grab workspace data from array
 		all_workspace.forEach( (workspace)=> {
 			if (!isNaN(book_ID) && workspace.ID == book_ID) {
 				// display
 				book_ws = workspace;
-				$("#button_book").before("<h2>Book this Workspace</h2>");
-				$("#button_book").before("<div>" + workspace.title +"</div>");
-				$("#button_book").before("<div>Location: " + workspace.location +"</div>");
-				$("#button_book").before("<div>Property description: " + workspace.desc +"</div>");
-				$("#button_book").before("<div>Capacity: " + workspace.capacity +" persons maximum</div>");
-				$("#button_book").before("<div>Amenities: " + workspace.amenities +"</div>");
-				let temp_str="";
-				workspace.avaliability.forEach( (wkday, index, arr) => {
-					temp_str+= arr_wk[wkday];
-					if (index < arr.length-1) {
-						temp_str += ", ";
-					}
-				});
-				$("#button_book").before("<div>Avaliability: " + temp_str +"</div>");	
-				$("#button_book").before("<input type='date' id='book_date'> ");
+				
+		$("#home_content").prepend("<h3>Book this Workspace</h3>");
+		
+		let propertyBox = $("<div>").addClass("propertyBox booking");
+		let title = $("<em>").text(book_ws.title);
+		propertyBox.append( title );
+		title.wrap("<div></div>");
+		propertyBox.append($("<div>").text("Location: " + book_ws.location));
+		propertyBox.append($("<div>").text("Description: " + book_ws.desc));
+		propertyBox.append($("<div>").text("Capacity: " + book_ws.capacity));
+		propertyBox.append($("<div>").text("Amenities: " + book_ws.amenities));
+		let temp_str = "Avaliability: ";
+			book_ws.avaliability.forEach( (wkday, index, arr) => {
+				temp_str+= arr_wk[wkday];
+				if (index < arr.length-1) {
+					temp_str += ", ";
+				}
+			});
+		propertyBox.append($("<div>").text(temp_str));
+		propertyBox.append($("<input type='date' id='book_date'> ") );
+		
+		let button_txt = '<button type="button" id="button_book" class="hover">Book</button>';
+		propertyBox.append($(button_txt).val("ws" + book_ws.ID));
+			
+		$(".propertiesContainer").append(propertyBox);
+				
 			}
 		});
 		try {book_ws.ID}
@@ -211,15 +224,25 @@ $(document).ready(function(){
 				window.alert("You can only book a future date");
 			else {
 				book_ws.avaliability.forEach( (wkday ) => {
+					
 					if (date_valid == false && wkday == bk_date.getUTCDay())
+					{
 						date_valid = true;
+					}
 				});
 			
+			}
+			if (date_valid)
+			{
 				// store booking to book_ws
 				// booking: workspace ID, coworker ID, date
 				book_ws.bookings.push({"ws": book_ws.ID, "user": user_ID, "date": bk_date.getUTCFullYear() + '-' + (bk_date.getUTCMonth()+1) + '-'+ bk_date.getUTCDate()} );
 				window.alert("Booking completed.\nInfo: "+JSON.stringify(book_ws.bookings[0] ) );
-				window.location.href='coworker_search.html?userid=' + user_ID;
+				window.location.href='coworker_search.html?userid=' + user_ID + '&search=';
+			}
+			else
+			{
+				window.alert("Booking date is not avaliable. Try another date." );
 			}
 
 		});	
@@ -258,24 +281,30 @@ $(document).ready(function(){
 				
 					// display
 					book_ws = workspace;
-					$("#home_content").empty();
-					let temp_str='<h2>Add / Edit this Workspace</h2>' +
-						'<div>Title: <input type="text" id="ed_title" placeholder="Enter changes" value="' + book_ws.title + '"></div>' +
-						'<div>Location: <input type="text" id="ed_loc" placeholder="Enter changes" value="' + book_ws.location +'"></div>' +
-						'<div>Description: <input type="text" id="ed_desc" placeholder="Enter changes" value="' + book_ws.desc + '"></div>' +
-						'<div>Capacity: <input type="text" id="ed_cap" placeholder="Enter changes" value="' + book_ws.capacity + '"> persons max</div>' +
-						'<div>Amenities: <textarea rows="4" cols="60" id="ed_am" placeholder="Enter changes">' + book_ws.amenities + '</textarea></div>' +
-						'<div>Avaliability: <input type="text" id="ed_ava" placeholder="Enter changes" size="60" value="';
+					$(".propertyBox").remove();
 					
+					
+					let propertyBox = $("<div>").addClass("propertyBox edit_ws");
+					propertyBox.append($('<div>Title: <input type="text" id="ed_title" placeholder="Enter changes" value="' + book_ws.title + '"></div>'));
+					propertyBox.append('<div>Location: <input type="text" id="ed_loc" placeholder="Enter changes" value="' + book_ws.location +'"></div>');
+					propertyBox.append('<div>Description: <input type="text" id="ed_desc" placeholder="Enter changes" value="' + book_ws.desc + '"></div>');
+					propertyBox.append('<div>Capacity: <input type="text" id="ed_cap" placeholder="Enter changes" value="' + book_ws.capacity + '"> persons max</div>');
+					propertyBox.append('<div>Amenities: <textarea rows="4" cols="60" id="ed_am" placeholder="Enter changes">' + book_ws.amenities + '</textarea></div>');
+					
+					let temp_str='<div>Avaliability: <input type="text" id="ed_ava" placeholder="Enter changes" size="60" value="';
 					workspace.avaliability.forEach( (wkday, index, arr) => {
 						temp_str+= arr_wk[wkday];
 						if (index < arr.length-1) {
 							temp_str += ", ";
 						}
 					});
-					temp_str += '"></div>' + '<input type="button" id="button_edit" value="Save Changes">';
-					
-					$("#home_content").append(temp_str);
+					temp_str += '"></div>'
+					propertyBox.append(temp_str); //Avaliability
+					propertyBox.append('<button type="button" id="button_edit" class="hover" value="save">Save Changes</button>');
+					propertyBox.append('<button type="button" id="button_del" class="hover" value="delete">Delete Workspace</button>');
+
+					$(".propertiesContainer").append(propertyBox);
+
 				}
 			}
 		});
@@ -333,7 +362,6 @@ $(document).ready(function(){
 	// ************* map workspace data to index.html property boxes *************
 	// use data in all_workspace array to populate properties container
 	else if ($(".div_index").length) {
-	window.alert("in index.html");
 	
 	function addPropertyBoxes() {
 		all_workspace.forEach(function(workspace) {
@@ -368,7 +396,7 @@ $(document).ready(function(){
 	// signup.html 
 	// ************* store signup data to array all_users_db *************
 	else if ($(".signupButton").length) {
-		window.alert("in signup.html");
+		
 	function addUser(userType) {
 		
 		var username;
@@ -418,7 +446,6 @@ $(document).ready(function(){
 	// login.html 
 	// ************* login functionality *************
 	else if ($("#loginButton").length) {
-		window.alert("in login.html");
 		
 	$("#loginButton").click(function() {
 		var loginUsername = $("#loginUsername").val();
@@ -456,8 +483,7 @@ $(document).ready(function(){
 	// ownerAllProperties.html 
 	// ************* show owner properties on login *************
 	// show owner's properties
-	else if ($(".propertyBoxAdd").length) {
-		window.alert("in ownerAllProperties.html");		
+	else if ($(".propertyBoxAdd").length) {	
 		
 	const params = new URLSearchParams(window.location.search);
 	let user_ID = parseInt(params.get('userid'));
@@ -475,7 +501,7 @@ $(document).ready(function(){
 	// use data in all_workspace array to populate properties container
 	function addOwnerPropertyBoxes() {
 		// add link to add new workspace
-		$(".propertyBoxAdd").wrapAll("<a href='owner_add.html?userid=" + user_ID + "&ws='></a>");
+		$(".propertyBoxAdd").children().wrapAll("<a href='owner_add.html?userid=" + user_ID + "&ws='></a>");
 		
 		
 		// filter workspaces by owner userID
@@ -558,25 +584,24 @@ function ws_search(search_arr, userid)
 		if (userid)
 		{
 			// userid not falsy, ie user logged in
-			button_txt = "  <input type='button' id='button_book' value='Book'>";
+			button_txt = "<button type='button' class='button_to_book hover'>Book</button>";
 		}
 		else
 		{
 			// userid falsy, ie user not logged in
-			button_txt = "  <input type='button' class='button_to_login' value='Login & Book'>";
+			button_txt = "<button type='button' class='button_to_book hover'>Login & Book</button>";
 		}
-		
 		
 		disp_ws.forEach ( (ws) => {
 			
-			let propertyBox = $("<div>").addClass("propertyBox");
-			propertyBox.attr('id', 'ws' + ws.ID);
+			let propertyBox = $("<div>").addClass("propertyBox booking");
 			let title = $("<em>").text(ws.title);
-			
-			let location = $("<div>").text("Location: " + ws.location);
-			let desc = $("<div>").text("Description: " + ws.desc);
-			let capacity = $("<div>").text("Capacity: " + ws.capacity);
-			let amenities = $("<div>").text("Amenities: " + ws.amenities);
+			propertyBox.append( title );
+			title.wrap("<div></div>");
+			propertyBox.append($("<div>").text("Location: " + ws.location));
+			propertyBox.append($("<div>").text("Description: " + ws.desc));
+			propertyBox.append($("<div>").text("Capacity: " + ws.capacity));
+			propertyBox.append($("<div>").text("Amenities: " + ws.amenities));
 			let temp_str = "Avaliability: ";
 				ws.avaliability.forEach( (wkday, index, arr) => {
 					temp_str+= arr_wk[wkday];
@@ -584,38 +609,12 @@ function ws_search(search_arr, userid)
 						temp_str += ", ";
 					}
 				});
-			let avaliability = $("<div>").text(temp_str);
-
-			propertyBox.append( title );
-			title.wrap("<div></div>");
-			propertyBox.append(location);
-			propertyBox.append(desc);
-			propertyBox.append(capacity);
-			propertyBox.append(amenities);
-			propertyBox.append(avaliability);
-
+			
+			propertyBox.append($("<div>").text(temp_str));
+			propertyBox.append($(button_txt).val("ws" + ws.ID));
+			
 			$(".propertiesContainer").append(propertyBox);
-			
-			/*
-			let temp_str = "";
-			temp_str = "<div class='propertyBox' id='ws" + ws.ID + "'><h2>" + 
-				ws.title + button_txt + "</h2>" +
-				"<ul><li>Location: " + ws.location + "</li>" +
-				"<ul><li>Description: " + ws.desc + "</li>" +
-				"<ul><li>Capacity: " + ws.capacity + " persons max</li>" +
-				"<ul><li>Amenities: " + ws.amenities + "</li></ul>" +
-				"<span>Avaliability: ";
-			ws.avaliability.forEach( (wkday, index, arr) => {
-					temp_str+= arr_wk[wkday];
-					if (index < arr.length-1) {
-						temp_str += ", ";
-					}
-			});
-			temp_str += "</span></div>"
-			
-			$("#home_content").append(temp_str);
-			
-			*/
+
 		});
 		
 	}
