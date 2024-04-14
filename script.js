@@ -50,7 +50,74 @@ const all_workspace = [
 		"amenities": "Street parking",
 		"avaliability": [0,2,5], //0=Sun, 1=Mon,..., 6=Sat
 		"bookings": []
-	}];
+	},
+		{
+		"ID": 4,
+		"owner": 1,
+		"title": "Workspace 4",
+		"location": "Downtown",
+		"desc": "Great for board meeting",
+		"capacity": 15,
+		"amenities": "WiFi, Underground parking and street parking, Elevator",
+		"avaliability": [1], //0=Sun, 1=Mon,..., 6=Sat
+		"bookings": []
+	},
+	{
+		"ID": 5,
+		"owner": 2,
+		"title": "Workspace 5",
+		"location": "Downtown",
+		"desc": "Office space",
+		"capacity": 3,
+		"amenities": "Wifi",
+		"avaliability": [1,2,3,4,5], //0=Sun, 1=Mon,..., 6=Sat
+		"bookings": []
+	},
+	{
+		"ID": 6,
+		"owner": 2,
+		"title": "Workspace 6",
+		"location": "Beltline",
+		"desc": "Meeting room",
+		"capacity": 6,
+		"amenities": "Street parking",
+		"avaliability": [0,2,5], //0=Sun, 1=Mon,..., 6=Sat
+		"bookings": []
+	},
+		{
+		"ID": 7,
+		"owner": 1,
+		"title": "Workspace 7",
+		"location": "Downtown",
+		"desc": "Great for board meeting",
+		"capacity": 15,
+		"amenities": "WiFi, Underground parking and street parking, Elevator",
+		"avaliability": [1], //0=Sun, 1=Mon,..., 6=Sat
+		"bookings": []
+	},
+	{
+		"ID": 8,
+		"owner": 2,
+		"title": "Workspace 8",
+		"location": "Downtown",
+		"desc": "Office space",
+		"capacity": 3,
+		"amenities": "Wifi",
+		"avaliability": [1,2,3,4,5], //0=Sun, 1=Mon,..., 6=Sat
+		"bookings": []
+	},
+	{
+		"ID": 9,
+		"owner": 2,
+		"title": "Workspace 9",
+		"location": "Beltline",
+		"desc": "Meeting room",
+		"capacity": 6,
+		"amenities": "Street parking",
+		"avaliability": [0,2,5], //0=Sun, 1=Mon,..., 6=Sat
+		"bookings": []
+	}
+	];
 	
 const all_users=[];
 
@@ -105,7 +172,7 @@ $(document).ready(function(){
 		if (params.get('search') == null)
 		{
 			$("#home_content").children().hide();
-			$("#home_content").prepend("<h2>Please type keywords above to search for workspaces</h2>");
+			$("#home_content").prepend("<h3>Please type keywords above to search for workspaces</h3>");
 		}
 		else
 		{
@@ -264,6 +331,26 @@ $(document).ready(function(){
 			$("#home_content").children().hide();
 			$("#home_content").prepend("<h2>You must login to edit or add workspace</h2>");
 		}
+		else if (isNaN(book_ID))
+		{
+			// ws is NaN in param, start a new one
+			// get next ID, display blank List
+			// save to new ws when button pressed
+			book_ID = all_workspace.length;
+			
+			$(".propertyBox").remove();
+			
+			let propertyBox = $("<div>").addClass("propertyBox edit_ws");
+			propertyBox.append($('<div>Title: <input type="text" id="ed_title" placeholder="Enter title"></div>'));
+			propertyBox.append('<div>Location: <input type="text" id="ed_loc" placeholder="Enter location, e.g. Downtown"></div>');
+			propertyBox.append('<div>Description: <input type="text" id="ed_desc" placeholder="Enter description, e.g. Good for meeting"></div>');
+			propertyBox.append('<div>Capacity: <input type="text" id="ed_cap" placeholder="Enter capacity"> persons max</div>');
+			propertyBox.append('<div>Amenities: <textarea rows="4" cols="60" id="ed_am" placeholder="Enter amenities, e.g. WiFi, street parking"></textarea></div>');
+			propertyBox.append('<div>Avaliability: <input type="text" id="ed_ava" placeholder="Enter avaliability, e.g. Monday, Friday" size="60"></div>'); 
+			propertyBox.append('<button type="button" id="button_new" class="hover" value="save">Save New Workspace</button>');
+			$(".propertiesContainer").append(propertyBox);
+			
+		}
 		else 
 		{
 		// grab workspace data from array
@@ -273,7 +360,7 @@ $(document).ready(function(){
 				{
 					// workspace not owned by user_ID
 					$("#home_content").children().hide();
-					$("#home_content").prepend("<h2>You do not own this workspace</h2>");
+					$("#home_content").prepend("<h3>You do not own this workspace</h3>");
 				}
 				else
 				{
@@ -282,7 +369,6 @@ $(document).ready(function(){
 					// display
 					book_ws = workspace;
 					$(".propertyBox").remove();
-					
 					
 					let propertyBox = $("<div>").addClass("propertyBox edit_ws");
 					propertyBox.append($('<div>Title: <input type="text" id="ed_title" placeholder="Enter changes" value="' + book_ws.title + '"></div>'));
@@ -314,6 +400,18 @@ $(document).ready(function(){
 			$("#home_content").prepend("<h2>You have not select a workspace</h2>");
 		}
 		}
+		
+		$("#button_del").click(function () {
+			// delete workspace from database
+			let title = book_ws.title;
+			let index = all_workspace.indexOf(book_ws);
+			if (index > -1) 
+			{ // only splice array when item is found
+				all_workspace.splice(index, 1);
+				window.alert("Workspace with title '" + title + "' is deleted");
+				window.location.href='ownerAllProperties.html?userid=' + user_ID;
+			}
+		});
 		
 		$("#button_edit").click(function(){
 			// get all val() and save to workspace		
@@ -356,6 +454,58 @@ $(document).ready(function(){
 				window.alert("Workspace '" + book_ws.title +"' details edited");
 				window.location.href='ownerAllProperties.html?userid=' + user_ID;
 		});	
+
+		$("#button_new").click(function(){
+			// create new ws record
+			// get all val() and save to workspace		
+			// store booking to book_ws
+			// booking: workspace ID, coworker ID, date
+			
+			book_ws = 	{
+				"ID": book_ID,
+				"owner": user_ID,
+				"title": $("#ed_title").val(),
+				"location": $("#ed_loc").val(),
+				"desc": $("#ed_desc").val(),
+				"capacity": parseInt($("#ed_cap").val()),
+				"amenities": $("#ed_am").val(),
+				"avaliability": [], //0=Sun, 1=Mon,..., 6=Sat
+				"bookings": []
+			};
+			all_workspace.push(book_ws);
+			
+			let temp_arr = $("#ed_ava").val().toLowerCase().split(/(?:,| )+/);
+			temp_arr.forEach( (wkday) => {
+				switch (wkday) 
+				{
+					case "sunday":
+						book_ws.avaliability.push(0);
+						break;
+					case "monday":
+						book_ws.avaliability.push(1);
+						break;
+					case "tuesday":
+						book_ws.avaliability.push(2);
+						break;
+					case "wednesday":
+						book_ws.avaliability.push(3);
+						break;
+					case "thursday":
+						book_ws.avaliability.push(4);
+						break;
+					case "friday":
+						book_ws.avaliability.push(5);
+						break;
+					case "saturday":
+						book_ws.avaliability.push(6);
+						break;
+					}
+				});
+				
+				window.alert("New workspace '" + book_ws.title +"' is added");
+				//window.alert("ws="+JSON.stringify(book_ws));
+				window.location.href='ownerAllProperties.html?userid=' + user_ID;
+		});	
 	}
 	
 	// index.html
@@ -364,7 +514,16 @@ $(document).ready(function(){
 	else if ($(".div_index").length) {
 	
 	function addPropertyBoxes() {
-		all_workspace.forEach(function(workspace) {
+		
+		const shuffled = all_workspace.sort(() => 0.5 - Math.random());
+		let selected = shuffled;
+		if (shuffled.length > 6)
+		{
+			// Max display = 6 workspace
+			selected = shuffled.splice(0,6);
+		}
+		
+		selected.forEach(function(workspace) {
 			var propertyBox = $("<div>").addClass("propertyBox");
 			var title = $("<em>").text(workspace.title);
 			
@@ -541,10 +700,14 @@ function disp_user(userid) {
 	
 	if(isNaN(userid) )
 	{
-		$("#home_content, .propertiesContainer").children().hide();
+		$("#home_content").children().hide();
 		return false;
 	}
 	$("#user").text("User ID: " + userid);
+	$(".drop_content").children().each( function() {
+		let temp_str = $(this).attr('href') + userid;
+		$(this).attr('href', temp_str);
+	});
 	return true;
 }
 
@@ -589,7 +752,7 @@ function ws_search(search_arr, userid)
 		else
 		{
 			// userid falsy, ie user not logged in
-			button_txt = "<button type='button' class='button_to_book hover'>Login & Book</button>";
+			button_txt = "<button type='button' class='button_to_login hover'>Login & Book</button>";
 		}
 		
 		disp_ws.forEach ( (ws) => {
