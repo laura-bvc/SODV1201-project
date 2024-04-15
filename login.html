@@ -15,6 +15,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login ~ Office Anywhere</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	<script src="./js/dist/jquery.validate.js"></script>
 </head>
 <body>
 
@@ -41,12 +42,12 @@
 	<div class="pageBody">
 	-->
 	<div id="home_content" class="div_main">
-            <div class="signupBox">
-                <input type="text" name="loginUsername" id="loginUsername" placeholder="Username" required>
-                <input type="password" name="loginPassword" id="loginPassword" placeholder="Password" required>
+            <form id="Login" class="signupBox" method="POST">
+                <input type="text" name="loginUsername" id="loginUsername" placeholder="Username" >
+                <input type="password" name="loginPassword" id="loginPassword" placeholder="Password">
                 <button id="loginButton" class="hover">Log in</button>
-                <h3 id="loginMessage"></h3>
-            </div>
+                <h3 id="loginMessage" class="error"></h3>
+            </form>
         <div class="haveAnAccountBar">
             <div>Don't have an account? Sign up <a href="signup.html" class="hover">here</a></div>
             <!-- <button id="goToSignupBtn">Sign up</button> -->

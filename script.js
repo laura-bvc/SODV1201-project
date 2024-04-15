@@ -17,6 +17,7 @@
 
 // URL Get param: search, userid, book, ws
 
+
 const all_workspace = [
 	{
 		"ID": 1,
@@ -200,13 +201,13 @@ $(document).ready(function(){
 		{
 			$("#home_content").children().hide();
 			$("#home_content").prepend("<div><a href='login.html'>Login to book workspace</a></div>");
-			$("#home_content").prepend("<h2>You are not logged in</h2>");
+			$("#home_content").prepend("<h3>You are not logged in</h3>");
 		}
 		else if (params.get('search') == null)
 		{
 			// no search terms
 			$("#home_content").children().hide();
-			$("#home_content").prepend("<h2>Please type keywords above to search for workspaces</h2>");
+			$("#home_content").prepend("<h3>Please type keywords above to search for workspaces</h3>");
 		}
 		else
 		{
@@ -276,7 +277,7 @@ $(document).ready(function(){
 		try {book_ws.ID}
 		catch (err) {
 			$("#button_book").hide();
-			$("#button_book").before("<h2>You have not select a workspace.</h2>");
+			$("#button_book").before("<h3>You have not select a workspace.</h3>");
 			$("#button_book").before("<div><a href='coworker_search.html'>Go back to search for a workspace to book</a></div>");
 		}
 		
@@ -329,7 +330,7 @@ $(document).ready(function(){
 		if (!disp_user(user_ID))
 		{
 			$("#home_content").children().hide();
-			$("#home_content").prepend("<h2>You must login to edit or add workspace</h2>");
+			$("#home_content").prepend("<h3>You must login to edit or add workspace</h3>");
 		}
 		else if (isNaN(book_ID))
 		{
@@ -340,14 +341,28 @@ $(document).ready(function(){
 			
 			$(".propertyBox").remove();
 			
-			let propertyBox = $("<div>").addClass("propertyBox edit_ws");
-			propertyBox.append($('<div>Title: <input type="text" id="ed_title" placeholder="Enter title"></div>'));
-			propertyBox.append('<div>Location: <input type="text" id="ed_loc" placeholder="Enter location, e.g. Downtown"></div>');
-			propertyBox.append('<div>Description: <input type="text" id="ed_desc" placeholder="Enter description, e.g. Good for meeting"></div>');
-			propertyBox.append('<div>Capacity: <input type="text" id="ed_cap" placeholder="Enter capacity"> persons max</div>');
-			propertyBox.append('<div>Amenities: <textarea rows="4" cols="60" id="ed_am" placeholder="Enter amenities, e.g. WiFi, street parking"></textarea></div>');
-			propertyBox.append('<div>Avaliability: <input type="text" id="ed_ava" placeholder="Enter avaliability, e.g. Monday, Friday" size="60"></div>'); 
-			propertyBox.append('<button type="button" id="button_new" class="hover" value="save">Save New Workspace</button>');
+			let propertyBox = $("<form>").addClass("propertyBox edit_ws");
+			propertyBox.attr("id","editWS");
+					
+			propertyBox.append('<label for="ed_title">Title: &nbsp;&nbsp;</label><br>');
+			propertyBox.append('<input type="text" id="ed_title" name="ed_title" placeholder="Enter title"><br>');
+					
+			propertyBox.append('<br><label for="ed_loc">Location: &nbsp;&nbsp;</label><br>');
+			propertyBox.append('<input type="text" id="ed_loc" name="ed_loc" placeholder="Enter location, e.g. Downtown"><br>');
+					
+			propertyBox.append('<br><label for="ed_desc">Description: &nbsp;&nbsp;</label><br>');
+			propertyBox.append('<input type="text" id="ed_desc" name="ed_desc" placeholder="Enter description, e.g. Good for meeting"><br>');
+					
+			propertyBox.append('<br><label for="ed_cap">Max capacity: &nbsp;&nbsp;</label><br>');
+			propertyBox.append('<input type="text" id="ed_cap" name="ed_cap" placeholder="Enter capacity"><br>');
+					
+			propertyBox.append('<br><label for="ed_am">Amenities: &nbsp;&nbsp;</label><br>');
+			propertyBox.append('<textarea rows="4" cols="60" id="ed_am" name="ed_am" placeholder="Enter amenities, e.g. WiFi, street parking"></textarea><br>');
+					
+			propertyBox.append('<br><label for="ed_ava">Avaliability: &nbsp;&nbsp;</label><br>');
+			propertyBox.append('<input type="text" id="ed_ava" name="ed_ava" placeholder="Enter avaliability, e.g. Monday, Friday" size="60"><br>');
+			
+			propertyBox.append('<br><button type="button" id="button_new" class="hover" value="save">Save New Workspace</button>');
 			$(".propertiesContainer").append(propertyBox);
 			
 		}
@@ -370,23 +385,35 @@ $(document).ready(function(){
 					book_ws = workspace;
 					$(".propertyBox").remove();
 					
-					let propertyBox = $("<div>").addClass("propertyBox edit_ws");
-					propertyBox.append($('<div>Title: <input type="text" id="ed_title" placeholder="Enter changes" value="' + book_ws.title + '"></div>'));
-					propertyBox.append('<div>Location: <input type="text" id="ed_loc" placeholder="Enter changes" value="' + book_ws.location +'"></div>');
-					propertyBox.append('<div>Description: <input type="text" id="ed_desc" placeholder="Enter changes" value="' + book_ws.desc + '"></div>');
-					propertyBox.append('<div>Capacity: <input type="text" id="ed_cap" placeholder="Enter changes" value="' + book_ws.capacity + '"> persons max</div>');
-					propertyBox.append('<div>Amenities: <textarea rows="4" cols="60" id="ed_am" placeholder="Enter changes">' + book_ws.amenities + '</textarea></div>');
+					let propertyBox = $("<form>").addClass("propertyBox edit_ws");
+					propertyBox.attr("id","editWS");
 					
-					let temp_str='<div>Avaliability: <input type="text" id="ed_ava" placeholder="Enter changes" size="60" value="';
+					propertyBox.append('<label for="ed_title">Title: &nbsp;&nbsp;</label><br>');
+					propertyBox.append('<input type="text" id="ed_title" name="ed_title" placeholder="Enter changes" value="' + book_ws.title + '"><br>');
+					
+					propertyBox.append('<br><label for="ed_loc">Location: &nbsp;&nbsp;</label><br>');
+					propertyBox.append('<input type="text" id="ed_loc" name="ed_loc" placeholder="Enter changes" value="' + book_ws.location +'"><br>');
+					
+					propertyBox.append('<br><label for="ed_desc">Description: &nbsp;&nbsp;</label><br>');
+					propertyBox.append('<input type="text" id="ed_desc" name="ed_desc" placeholder="Enter changes" value="' + book_ws.desc + '"><br>');
+					
+					propertyBox.append('<br><label for="ed_cap">Max capacity: &nbsp;&nbsp;</label><br>');
+					propertyBox.append('<input type="text" id="ed_cap" name="ed_cap" placeholder="Enter changes" value="' + book_ws.capacity + '"><br>');
+					
+					propertyBox.append('<br><label for="ed_am">Amenities: &nbsp;&nbsp;</label><br>');
+					propertyBox.append('<textarea rows="4" cols="60" id="ed_am" name="ed_am" placeholder="Enter changes">' + book_ws.amenities + '</textarea><br>');
+					
+					propertyBox.append('<br><label for="ed_ava">Avaliability: &nbsp;&nbsp;</label><br>');
+					let temp_str='<input type="text" id="ed_ava" name="ed_ava" placeholder="Enter changes" size="60" value="';
 					workspace.avaliability.forEach( (wkday, index, arr) => {
 						temp_str+= arr_wk[wkday];
 						if (index < arr.length-1) {
 							temp_str += ", ";
 						}
 					});
-					temp_str += '"></div>'
+					temp_str += '"><br>'
 					propertyBox.append(temp_str); //Avaliability
-					propertyBox.append('<button type="button" id="button_edit" class="hover" value="save">Save Changes</button>');
+					propertyBox.append('<br><button type="button" id="button_edit" class="hover" value="save">Save Changes</button>');
 					propertyBox.append('<button type="button" id="button_del" class="hover" value="delete">Delete Workspace</button>');
 
 					$(".propertiesContainer").append(propertyBox);
@@ -394,14 +421,52 @@ $(document).ready(function(){
 				}
 			}
 		});
-		try {book_ws.ID}
-		catch (err) {
-			$("#home_content").children().hide();
-			$("#home_content").prepend("<h2>You have not select a workspace</h2>");
-		}
+
 		}
 		
-		$("#button_del").click(function () {
+		$("#editWS").validate({
+			rules: {
+				ed_title: {
+					required: true,
+					minlength: 4
+				},
+				ed_loc: {
+					required: true
+				},
+				ed_desc: {
+					required: true
+				},
+				ed_cap: {
+					required: true,
+					number: true,
+					min: 1
+				},
+				ed_am:{
+					required: true
+				},
+				ed_ava: {
+					required: true
+				}
+			},
+			message: {
+				ed_title: {
+					required: "Please enter a title",
+					minlength: "Please enter at least 4 characters"
+				},
+				ed_loc: "Please enter a location",
+				ed_desc: "Please enter a description",
+				ed_cap: {
+					required: "Please enter a capcity",
+					number: "Please enter capcity as number",
+					min: "Please enter capacity greater than 1"
+				},
+				ed_am: "Please enter amenities",
+				ed_ava: "Please enter avaliability"
+			}
+		});
+		
+		$("#button_del").click(function (e) {
+			e.preventDefault();
 			// delete workspace from database
 			let title = book_ws.title;
 			let index = all_workspace.indexOf(book_ws);
@@ -413,10 +478,18 @@ $(document).ready(function(){
 			}
 		});
 		
-		$("#button_edit").click(function(){
+		$("#button_edit").click(function(e){
+			e.preventDefault();
 			// get all val() and save to workspace		
 			// store booking to book_ws
 			// booking: workspace ID, coworker ID, date
+			let isValid = $("#editWS").valid();
+			
+			window.alert("button_edit clicked");
+
+			
+			if (isValid)
+			{
 			book_ws.title = $("#ed_title").val();
 			book_ws.location = $("#ed_loc").val();
 			book_ws.desc = $("#ed_desc").val();
@@ -453,13 +526,23 @@ $(document).ready(function(){
 				
 				window.alert("Workspace '" + book_ws.title +"' details edited");
 				window.location.href='ownerAllProperties.html?userid=' + user_ID;
+			}
 		});	
 
-		$("#button_new").click(function(){
+		$("#button_new").click(function(e){
+			e.preventDefault();
+			
+			window.alert("button_new clicked");
+			
 			// create new ws record
 			// get all val() and save to workspace		
 			// store booking to book_ws
 			// booking: workspace ID, coworker ID, date
+			
+			let isValid = $("#editWS").valid();
+			
+			if (isValid)
+			{
 			
 			book_ws = 	{
 				"ID": book_ID,
@@ -505,6 +588,7 @@ $(document).ready(function(){
 				window.alert("New workspace '" + book_ws.title +"' is added");
 				//window.alert("ws="+JSON.stringify(book_ws));
 				window.location.href='ownerAllProperties.html?userid=' + user_ID;
+			}
 		});	
 	}
 	
@@ -556,30 +640,134 @@ $(document).ready(function(){
 	// ************* store signup data to array all_users_db *************
 	else if ($(".signupButton").length) {
 		
+		
+		$("#cwSignup").validate({
+			rules: {
+				coworkerSignupUsername: {
+					required: true,
+					minlength: 4
+				},
+				coworkerSignupEmail: {
+					required: true,
+					email: true
+				},
+				cwPhone: {
+					required: true,
+					phoneUS: true
+				},
+				coworkerSignupPassword: {
+					required: true,
+					minlength: 5
+				},
+				confirm_cw_pwd: {
+					required: true,
+					minlength: 5,
+					equalTo: "#coworkerSignupPassword"
+				}
+			},
+			messages: {
+				coworkerSignupUsername: {
+					required: "Please enter a username",
+					minlength: "Your username must consist of at least 4 characters"
+				},
+				coworkerSignupEmail: "Please enter a valid email address",
+				
+				cwPhone: "Please enter a valid phone number",
+				
+				coworkerSignupPassword: {
+					required: "Please enter a password",
+					minlength: "Your password must consist of at least 5 characters"
+				},
+				confirm_cw_pwd: {
+					required: "Please re-type your password",
+					minlength: "Your username must consist of at least 5 characters",
+					equalTo: "Please enter the same password as above"
+				}
+			}
+		});
+		
+		$("#ownSignup").validate({
+			rules: {
+				ownerSignupUsername: {
+					required: true,
+					minlength: 4
+				},
+				ownerSignupEmail: {
+					required: true,
+					email: true
+				},
+				ownerPhone: {
+					required: true,
+					phoneUS: true
+				},
+				ownerSignupPassword: {
+					required: true,
+					minlength: 5
+				},
+				confirm_owner_pwd: {
+					required: true,
+					minlength: 5,
+					equalTo: "#ownerSignupPassword"
+				}
+			},
+			messages: {
+				ownerSignupUsername: {
+					required: "Please enter a username",
+					minlength: "Your username must consist of at least 4 characters"
+				},
+				ownerSignupEmail: "Please enter a valid email address",
+				
+				ownerPhone: "Please enter a valid phone number",
+				
+				ownerSignupPassword: {
+					required: "Please enter a password",
+					minlength: "Your password must consist of at least 5 characters"
+				},
+				confirm_owner_pwd: {
+					required: "Please re-type your password",
+					minlength: "Your username must consist of at least 5 characters",
+					equalTo: "Please enter the same password as above"
+				}
+			}
+		});
+		
+		
 	function addUser(userType) {
 		
-		var username;
-		var email;
-		var password;
-		var nextURL="#";
-		var userID = all_users_db.length + 1
+		let username;
+		let email;
+		let password;
+		let nextURL="#";
+		let userID = all_users_db.length + 1
+		let isValid = false;
+		let phone;
 		
-		if(userType === 'coworker')
+		if(userType === 'coworker' )
 		{
 			username = $("#coworkerSignupUsername").val();
 			email = $("#coworkerSignupEmail").val();
+			phone = $("#cwPhone").val();
 			password = $("#coworkerSignupPassword").val();
+			
 			nextURL = "coworker_search.html?userid=" + userID + "&search=";
+			isValid = $("#cwSignup").valid();
 		}
-		else if(userType === 'owner')
+		else if(userType === 'owner' )
 		{
 			username = $("#ownerSignupUsername").val();
 			email = $("#ownerSignupEmail").val();
+			phone = $("#ownerPhone").val();
 			password = $("#ownerSignupPassword").val();
+			
 			nextURL = "ownerAllProperties.html?userid=" + userID;
+			isValid = $("#ownSignup").valid();
 		}
+		
+		if (isValid)
+		{
 
-		//push user data to array
+		// check the username is unique
+		// push user data to array
 		all_users_db.push({
 			userID: userID,
 			userType: userType,
@@ -588,15 +776,21 @@ $(document).ready(function(){
 			password: password
 		});
 		
-		window.alert("User '" + userID +"' signed up as " + userType + " sucessfully.");
+		window.alert("User '" + username +"' signed up as " + userType + " sucessfully.");
 		window.location.href=nextURL;
+		}
+		else 
+		{
+			//window.alert("Input not valid");
+		}
 		
 	}
 	// function uses button click to determine 'coworker' or 'owner' userType
 	// and adds userType to database
-	$(".signupButton").click(function(){
-		var userType = $(this).data("type");
-		addUser(userType);
+	$(".signupButton").click(function(e){
+		e.preventDefault();
+		//var userType = $(this).data("type");
+		addUser($(this).data("type"));
 		
 	})
 	
@@ -606,14 +800,30 @@ $(document).ready(function(){
 	// ************* login functionality *************
 	else if ($("#loginButton").length) {
 		
-	$("#loginButton").click(function() {
+		$("#Login").validate({
+			rules: {
+				loginUsername: "required",
+				loginPassword: "required"
+				},
+			messages: {
+				loginUsername: "Please enter your username",
+				loginPassword: "Please enter your password"
+			}
+		});
+		
+	$("#loginButton").click(function(e) {
+		e.preventDefault();
 		var loginUsername = $("#loginUsername").val();
 		var loginPassword = $("#loginPassword").val();
+		let isValid = $("#Login").valid();
+		
+		if (isValid)
+		{
 
 		// find user in all_users_db
 		var user = all_users_db.find(function(u){
 			return u.username === loginUsername && u.password === loginPassword;
-		})
+		});
 
 		if(user)
 		{
@@ -633,8 +843,10 @@ $(document).ready(function(){
 		}
 		else
 		{
-			$("#loginMessage").text("Error! Username not found.");
+			$("#loginMessage").text("Login info incorrect");
 		}
+		}
+			
 	})
 	}
 
@@ -650,7 +862,7 @@ $(document).ready(function(){
 	if (!disp_user(user_ID))
 	{
 		$(".propertiesContainer").prepend("<div><a href='login.html'>Login to see your workspaces</a></div>");
-		$(".propertiesContainer").prepend("<h2>You are not logged in</h2>");
+		$(".propertiesContainer").prepend("<h3>You are not logged in</h3>");
 	}
 	else
 	{
@@ -734,7 +946,7 @@ function ws_search(search_arr, userid)
 	{
 		$("#home_content").children().hide();
 		$("#home_content").prepend("<div>Try again with other terms.</div>");
-		$("#home_content").prepend("<h2>Your search did not yield any result</h2>");
+		$("#home_content").prepend("<h3>Your search did not yield any result</h3>");
 	}
 	else 
 	{

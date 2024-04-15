@@ -223,7 +223,7 @@ h3 {
 
 .signupBoxContainer {
     display: flex;
-    height: 60vh;
+    height: 70vh;
 	margin: 0 15vw;
     justify-content: center;
 }
@@ -235,7 +235,7 @@ h3 {
     border: 1px solid;
     margin: 10vh auto 5vh auto;
     width: 300px;
-    height: 300px;
+    height: 60vh;
 }
 #loginButton {
 	font-family: 'Brush Script MT', 'Lucida Sans Typewriter', Helvetica, sans-serif;
@@ -279,7 +279,7 @@ h3 {
 }
 
 .edit_ws {
-	height: 58vh;
+	height: 63vh;
 	width: 70vw;
 }
 .edit_ws input , textarea{
@@ -341,4 +341,10 @@ h3 {
 
 #user {
 	width: 50px;
+}
+
+.error {
+	padding: 0 2vw;
+	color: red;
+	border-color: red;
 }
