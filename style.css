@@ -348,3 +348,7 @@ h3 {
 	color: red;
 	border-color: red;
 }
+
+.book_confirm {
+	padding: 10px 0;
+}
