@@ -15,6 +15,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign up ~ Office Anywhere</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	<script src="./js/dist/jquery.validate.js"></script>
+	<script src="./js/dist/additional-methods.min.js"></script>
 </head>
 <body>
 
@@ -40,18 +42,22 @@
 	-->
 	<div id="home_content" class="div_main">
         <div class="signupBoxContainer">
-            <div class="signupBox">
+            <form id="cwSignup" class="signupBox" method="POST">
                 <button name="coworkerSignupButton" id="coworkerSignupButton" class="signupButton hover" data-type="coworker">Sign up as a coworker</button>
-                <input type="text" name="coworkerSignupUsername" id="coworkerSignupUsername" placeholder="Username" required>
-                <input type="text" name="coworkerSignupEmail" id="coworkerSignupEmail" placeholder="Email" required>
-                <input type="password" name="coworkerSignupPassword" id="coworkerSignupPassword" placeholder="Password" required>
-            </div>
-            <div class="signupBox">
-                <button name="coworkerSignupButton" id="coworkerSignupButton" class="signupButton hover" data-type="owner">Sign up as an owner</button>
-                <input type="text" name="ownerSignupUsername" id="ownerSignupUsername" placeholder="Username" required>
-                <input type="text" name="ownerSignupEmail" id="ownerSignupEmail" placeholder="Email" required>
-                <input type="password" name="ownerSignupPassword" id="ownerSignupPassword" placeholder="Password" required>
-            </div>
+                <input type="text" name="coworkerSignupUsername" id="coworkerSignupUsername" placeholder="Username" >
+                <input type="text" name="coworkerSignupEmail" id="coworkerSignupEmail" placeholder="Email" >
+				<input type="text" name="cwPhone" id="cwPhone" placeholder="Phone number" >
+                <input type="password" name="coworkerSignupPassword" id="coworkerSignupPassword" placeholder="Password" >
+				<input type="password" name="confirm_cw_pwd" id="confirm_cw_pwd" placeholder="Re-type password" >
+			</form>
+            <form id="ownSignup" class="signupBox" method="POST">
+                <button name="ownerSignupButton" id="ownerSignupButton" class="signupButton hover" data-type="owner">Sign up as an owner</button>
+                <input type="text" name="ownerSignupUsername" id="ownerSignupUsername" placeholder="Username" >
+                <input type="text" name="ownerSignupEmail" id="ownerSignupEmail" placeholder="Email" >
+				<input type="text" name="ownerPhone" id="ownerPhone" placeholder="Phone number" >
+                <input type="password" name="ownerSignupPassword" id="ownerSignupPassword" placeholder="Password" >
+				<input type="password" name="confirm_owner_pwd" id="confirm_owner_pwd" placeholder="Re-type password" >
+            </form>
         </div>
         <div class="haveAnAccountBar">
             <div>Already have an account? Log in <a href="login.html" class="hover">here</a></div>
