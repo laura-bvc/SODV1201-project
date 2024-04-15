@@ -305,8 +305,18 @@ $(document).ready(function(){
 				// store booking to book_ws
 				// booking: workspace ID, coworker ID, date
 				book_ws.bookings.push({"ws": book_ws.ID, "user": user_ID, "date": bk_date.getUTCFullYear() + '-' + (bk_date.getUTCMonth()+1) + '-'+ bk_date.getUTCDate()} );
-				window.alert("Booking completed.\nInfo: "+JSON.stringify(book_ws.bookings[0] ) );
-				window.location.href='coworker_search.html?userid=' + user_ID + '&search=';
+				//window.alert("Booking completed.\nInfo: "+JSON.stringify(book_ws.bookings[0] ) );
+				// window.location.href='coworker_search.html?userid=' + user_ID + '&search=';
+				
+				$("#home_content").children().hide();
+				
+				$("#home_content").append("<h3>Booking completed for Workspace '" + book_ws.title + "'</h3>");
+				$("#home_content").append("<div class='propertyBox'><em>Booking details</em></div>");
+				$(".propertyBox").append("<div class='book_confirm'>Title: " + book_ws.title +"</div>");
+				$(".propertyBox").append("<div class='book_confirm'>Date: " + book_ws.bookings[0].date +"</div>");
+				$(".propertyBox").append("<div class='book_confirm'>Owner: Owner1</div>");
+				$(".propertyBox").append("<div class='book_confirm'>Contact email: test@example.com</div>");
+				$(".propertyBox").append("<div class='error book_confirm'>Please contact us at 1-800-CALL-NOW if require urgent support for your booking</div>");
 			}
 			else
 			{
@@ -485,6 +495,8 @@ $(document).ready(function(){
 			// booking: workspace ID, coworker ID, date
 			let isValid = $("#editWS").valid();
 			
+			window.alert("button_edit clicked");
+
 			
 			if (isValid)
 			{
@@ -529,6 +541,8 @@ $(document).ready(function(){
 
 		$("#button_new").click(function(e){
 			e.preventDefault();
+			
+			window.alert("button_new clicked");
 			
 			// create new ws record
 			// get all val() and save to workspace		
