@@ -485,8 +485,6 @@ $(document).ready(function(){
 			// booking: workspace ID, coworker ID, date
 			let isValid = $("#editWS").valid();
 			
-			window.alert("button_edit clicked");
-
 			
 			if (isValid)
 			{
@@ -531,8 +529,6 @@ $(document).ready(function(){
 
 		$("#button_new").click(function(e){
 			e.preventDefault();
-			
-			window.alert("button_new clicked");
 			
 			// create new ws record
 			// get all val() and save to workspace		
