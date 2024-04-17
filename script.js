@@ -485,7 +485,7 @@ $(document).ready(function(){
 					
 					
 					let temp_str='<input type="text" id="ed_ava" name="ed_ava" placeholder="Enter changes" size="60" value="';
-					let myJS = JSON.parse(JSON.stringify(ws.availability));
+					let myJS = JSON.parse(JSON.stringify(book_ws.availability));
 					if (!myJS || myJS.length < 1)
 					{
 						temp_str += "Not avaliable";
