@@ -15,7 +15,7 @@
 	--title-txt: #FF8300;
 }
 body {
-    font-family: 'Brush Script MT', 'Lucida Sans Typewriter', Helvetica, sans-serif;
+    font-family: 'Lucida Sans Typewriter', Helvetica, sans-serif;
 	background-color: var(--bg-cream);
 	color: grey;
 }
@@ -238,7 +238,7 @@ h3 {
     height: 60vh;
 }
 #loginButton {
-	font-family: 'Brush Script MT', 'Lucida Sans Typewriter', Helvetica, sans-serif;
+	font-family: 'Lucida Sans Typewriter', Helvetica, sans-serif;
     margin: 15px 80px;
 	text-align: center;
 }

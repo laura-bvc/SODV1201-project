@@ -17,8 +17,12 @@
 
 // URL Get param: search, userid, book, ws
 
+const urlUser = "https://sodv1201-project-backend.onrender.com/user";
+const urlWS = "https://sodv1201-project-backend.onrender.com/workspace";
+const urlBk = "https://sodv1201-project-backend.onrender.com/booking";
 
-const all_workspace = [
+
+var all_workspace = [
 	{
 		"ID": 1,
 		"owner": 1,
@@ -119,8 +123,6 @@ const all_workspace = [
 		"bookings": []
 	}
 	];
-	
-const all_users=[];
 
 const arr_wk = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
@@ -177,13 +179,11 @@ $(document).ready(function(){
 		}
 		else
 		{
+			
 			// search and display workspace
-			ws_search( params.get('search').toLowerCase().split(/(?:,| )+/) , null);
+			getWS2(ws_search, params.get('search').toLowerCase().split(/(?:,| )+/) , null );
+			//ws_search( params.get('search').toLowerCase().split(/(?:,| )+/) , null);
 		
-			$(".button_to_login").click(function(){
-				//********save search terms
-				window.location.href='login.html?search=' + ($("#div_search").text()).slice(14);
-			});	
 		}
 	}	
 	
@@ -212,12 +212,11 @@ $(document).ready(function(){
 		else
 		{
 			// search and display workspace
-			ws_search( params.get('search').toLowerCase().split(/(?:,| )+/) , user_ID);
 			
-			$(".button_to_book").click(function(){
-				//******** pass property ID from button
-				window.location.href='coworker_booking.html?book=' + $(this).val().slice(2) + '&userid=' + user_ID;
-			});	
+			getWS2(ws_search, params.get('search').toLowerCase().split(/(?:,| )+/) , user_ID );
+			//ws_search( params.get('search').toLowerCase().split(/(?:,| )+/) , user_ID);
+			
+			
 	}}
 	
 // coworker_booking.html
@@ -230,7 +229,6 @@ $(document).ready(function(){
 		const params = new URLSearchParams(window.location.search);
 		let book_ID = parseInt(params.get('book'));
 		let user_ID = parseInt(params.get('userid'));
-		let book_ws;
 
 		if (!disp_user(user_ID))
 		{
@@ -239,13 +237,21 @@ $(document).ready(function(){
 			$("#home_content").append("<div><a href='login.html'>Login to book a workspace</a></div>");
 		}
 		else 
-		{		
+		{
+			get1WS(coworker_book, book_ID, user_ID);
+		}
+		function coworker_book(book_ws, user_ID) {
+			
 		$(".propertyBox").remove();
 		// grab workspace data from array
-		all_workspace.forEach( (workspace)=> {
-			if (!isNaN(book_ID) && workspace.ID == book_ID) {
+		
+		//all_workspace.forEach( (workspace)=> {
+			//if (!isNaN(book_ID) && workspace.id == book_ID) {
+			if (book_ws) {
+			
 				// display
-				book_ws = workspace;
+				// fetched one with workplace id to book_ws
+				// book_ws = workspace;
 				
 		$("#home_content").prepend("<h3>Book this Workspace</h3>");
 		
@@ -258,23 +264,25 @@ $(document).ready(function(){
 		propertyBox.append($("<div>").text("Capacity: " + book_ws.capacity));
 		propertyBox.append($("<div>").text("Amenities: " + book_ws.amenities));
 		let temp_str = "Avaliability: ";
-			book_ws.avaliability.forEach( (wkday, index, arr) => {
-				temp_str+= arr_wk[wkday];
+			book_ws.availability.forEach( (wkday, index, arr) => {
+				temp_str += arr_wk[wkday];
 				if (index < arr.length-1) {
 					temp_str += ", ";
 				}
-			});
+			} ); 
+		
 		propertyBox.append($("<div>").text(temp_str));
 		propertyBox.append($("<input type='date' id='book_date'> ") );
 		
 		let button_txt = '<button type="button" id="button_book" class="hover">Book</button>';
-		propertyBox.append($(button_txt).val("ws" + book_ws.ID));
+		propertyBox.append($(button_txt).val("ws" + book_ws.id));
 			
 		$(".propertiesContainer").append(propertyBox);
 				
 			}
-		});
-		try {book_ws.ID}
+				
+		//});
+		try {book_ws.id}
 		catch (err) {
 			$("#button_book").hide();
 			$("#button_book").before("<h3>You have not select a workspace.</h3>");
@@ -291,8 +299,7 @@ $(document).ready(function(){
 			if ( bk_date <= new Date() )
 				window.alert("You can only book a future date");
 			else {
-				book_ws.avaliability.forEach( (wkday ) => {
-					
+				book_ws.availability.forEach( ( wkday ) => {
 					if (date_valid == false && wkday == bk_date.getUTCDay())
 					{
 						date_valid = true;
@@ -304,7 +311,32 @@ $(document).ready(function(){
 			{
 				// store booking to book_ws
 				// booking: workspace ID, coworker ID, date
-				book_ws.bookings.push({"ws": book_ws.ID, "user": user_ID, "date": bk_date.getUTCFullYear() + '-' + (bk_date.getUTCMonth()+1) + '-'+ bk_date.getUTCDate()} );
+				//book_ws.bookings.push({"ws": book_ws.id, "user": user_ID, "date": bk_date.getUTCFullYear() + '-' + (bk_date.getUTCMonth()+1) + '-'+ bk_date.getUTCDate()} );
+				
+				//create & save a booking
+				fetch(urlBk, {
+					method: 'POST',
+					body: JSON.stringify({
+					workspaceId: book_ws.id,
+					workspaceName: book_ws.title,
+					owner: book_ws.owner,
+					bookerId: user_ID,
+					bookerUsername: "Coworker 12",
+					date: bk_date,
+					price: book_ws.price
+				}),
+				headers: {
+					"Content-type": "application/json; charset=UTF-8"
+				}
+				})
+					.then( res => res.json())
+					.then(data => {
+						console.log(data.bookingId);
+					});
+				
+				// add bookingId to workspace
+				
+				
 				//window.alert("Booking completed.\nInfo: "+JSON.stringify(book_ws.bookings[0] ) );
 				// window.location.href='coworker_search.html?userid=' + user_ID + '&search=';
 				
@@ -313,7 +345,7 @@ $(document).ready(function(){
 				$("#home_content").append("<h3>Booking completed for Workspace '" + book_ws.title + "'</h3>");
 				$("#home_content").append("<div class='propertyBox'><em>Booking details</em></div>");
 				$(".propertyBox").append("<div class='book_confirm'>Title: " + book_ws.title +"</div>");
-				$(".propertyBox").append("<div class='book_confirm'>Date: " + book_ws.bookings[0].date +"</div>");
+				$(".propertyBox").append("<div class='book_confirm'>Date: " + bk_date +"</div>");
 				$(".propertyBox").append("<div class='book_confirm'>Owner: Owner1</div>");
 				$(".propertyBox").append("<div class='book_confirm'>Contact email: test@example.com</div>");
 				$(".propertyBox").append("<div class='error book_confirm'>Please contact us at 1-800-CALL-NOW if require urgent support for your booking</div>");
@@ -324,7 +356,8 @@ $(document).ready(function(){
 			}
 
 		});	
-		}  }
+		} 
+		}
 		
 // owner_add.html
 // ************* save all values to all_workspace array 
@@ -342,7 +375,15 @@ $(document).ready(function(){
 			$("#home_content").children().hide();
 			$("#home_content").prepend("<h3>You must login to edit or add workspace</h3>");
 		}
-		else if (isNaN(book_ID))
+		else {
+			// can change to get one WS with modified owner_add
+			getWS2(owner_add, book_ID, user_ID);
+		}
+			
+		function owner_add(book_ID, user_ID)
+		{
+
+			if (isNaN(book_ID))
 		{
 			// ws is NaN in param, start a new one
 			// get next ID, display blank List
@@ -378,9 +419,10 @@ $(document).ready(function(){
 		}
 		else 
 		{
+			
 		// grab workspace data from array
 		all_workspace.forEach( (workspace)=> {
-			if (!isNaN(book_ID) && workspace.ID == book_ID) {
+			if (!isNaN(book_ID) && workspace.id == book_ID) {
 				if (workspace.owner != user_ID)
 				{
 					// workspace not owned by user_ID
@@ -390,7 +432,6 @@ $(document).ready(function(){
 				else
 				{
 					// workspace found, user matched
-				
 					// display
 					book_ws = workspace;
 					$(".propertyBox").remove();
@@ -415,12 +456,19 @@ $(document).ready(function(){
 					
 					propertyBox.append('<br><label for="ed_ava">Avaliability: &nbsp;&nbsp;</label><br>');
 					let temp_str='<input type="text" id="ed_ava" name="ed_ava" placeholder="Enter changes" size="60" value="';
+					if ( !workspace.avaliability || workspace.avaliability.length <1)
+					{
+						temp_str += "Not avaliable";
+					}
+					else
+					{
 					workspace.avaliability.forEach( (wkday, index, arr) => {
 						temp_str+= arr_wk[wkday];
 						if (index < arr.length-1) {
 							temp_str += ", ";
 						}
 					});
+					}
 					temp_str += '"><br>'
 					propertyBox.append(temp_str); //Avaliability
 					propertyBox.append('<br><button type="button" id="button_edit" class="hover" value="save">Save Changes</button>');
@@ -474,15 +522,28 @@ $(document).ready(function(){
 				ed_ava: "Please enter avaliability"
 			}
 		});
+	
 		
 		$("#button_del").click(function (e) {
+			
 			e.preventDefault();
 			// delete workspace from database
 			let title = book_ws.title;
-			let index = all_workspace.indexOf(book_ws);
+			let index = book_ws.id;
 			if (index > -1) 
 			{ // only splice array when item is found
-				all_workspace.splice(index, 1);
+				//all_workspace.splice(index, 1);
+				
+				
+				fetch(urlWS+'/'+book_ws.id, {
+					method: 'DELETE'
+				})
+					.then( res => res.text())
+					.then(data => {
+						console.log(data);
+					});
+					
+				
 				window.alert("Workspace with title '" + title + "' is deleted");
 				window.location.href='ownerAllProperties.html?userid=' + user_ID;
 			}
@@ -530,6 +591,32 @@ $(document).ready(function(){
 						break;
 					}
 				});
+			fetch(urlWS+'/'+book_ws.id, {
+					method: 'PUT',
+					body: JSON.stringify({
+					id: book_ID,
+					owner: user_ID,
+					title: $("#ed_title").val(),
+					location: $("#ed_loc").val(),
+					desc: $("#ed_desc").val(),
+					capacity: parseInt($("#ed_cap").val()),
+					amenities: $("#ed_am").val(),
+					address: "123 Avenue",
+					squareFootage: 50,
+					parking: true,
+					publicTransport: true,
+					smoking: false,
+					availability: [2,3],
+					bookings: []
+				}),
+				headers: {
+					"Content-type": "application/json; charset=UTF-8"
+				}
+				})
+					.then( res => res.text())
+					.then(data => {
+						console.log(data);
+					});
 				
 				window.alert("Workspace '" + book_ws.title +"' details edited");
 				window.location.href='ownerAllProperties.html?userid=' + user_ID;
@@ -560,7 +647,33 @@ $(document).ready(function(){
 				"avaliability": [], //0=Sun, 1=Mon,..., 6=Sat
 				"bookings": []
 			};
-			all_workspace.push(book_ws);
+			//all_workspace.push(book_ws);
+			fetch(urlWS, {
+					method: 'POST',
+					body: JSON.stringify({
+					id: book_ID,
+					owner: user_ID,
+					title: $("#ed_title").val(),
+					location: $("#ed_loc").val(),
+					desc: $("#ed_desc").val(),
+					capacity: parseInt($("#ed_cap").val()),
+					amenities: $("#ed_am").val(),
+					address: "123 Avenue",
+					squareFootage: 50,
+					parking: true,
+					publicTransport: true,
+					smoking: false,
+					availability: [2,3],
+					bookings: []
+				}),
+				headers: {
+					"Content-type": "application/json; charset=UTF-8"
+				}
+				})
+					.then( res => res.text())
+					.then(data => {
+						console.log(data);
+					});
 			
 			let temp_arr = $("#ed_ava").val().toLowerCase().split(/(?:,| )+/);
 			temp_arr.forEach( (wkday) => {
@@ -596,13 +709,16 @@ $(document).ready(function(){
 			}
 		});	
 	}
+	}
 	
 	// index.html
 	// ************* map workspace data to index.html property boxes *************
 	// use data in all_workspace array to populate properties container
 	else if ($(".div_index").length) {
 	
-	function addPropertyBoxes() {
+	function addPropertyBoxes( ) {
+		
+		//all_workspace = arr_ws;
 		
 		const shuffled = all_workspace.sort(() => 0.5 - Math.random());
 		let selected = shuffled;
@@ -633,9 +749,9 @@ $(document).ready(function(){
 			$(".propertiesContainer").append(propertyBox);
 			propertyBox.children().wrapAll("<a href='login.html'></a>");
 		});
+		
 	}
-	addPropertyBoxes();
-	
+	getWS(addPropertyBoxes);
 
 
 	}
@@ -871,7 +987,7 @@ $(document).ready(function(){
 	}
 	else
 	{
-		addOwnerPropertyBoxes();
+		getWS(addOwnerPropertyBoxes);
 	}
 		
 	// use data in all_workspace array to populate properties container
@@ -903,7 +1019,7 @@ $(document).ready(function(){
 			propertyBox.append(capacity);
 
 			$(".propertiesContainer").append(propertyBox);
-			propertyBox.children().wrapAll("<a href='owner_add.html?userid=" + user_ID + "&ws=" + workspace.ID + "'></a>");
+			propertyBox.children().wrapAll("<a href='owner_add.html?userid=" + user_ID + "&ws=" + workspace.id + "'></a>");
 		});
 	}
 	
@@ -932,7 +1048,7 @@ function ws_search(search_arr, userid)
 {
 	// userid = null if not logged in
 	// parse search terms, and display relevant workspace
-	const disp_ws = [];
+	const disp_ws = []; // store search result
 	
 	search_arr.forEach ( (txt) => {
 		all_workspace.forEach ( (ws) => {
@@ -983,25 +1099,43 @@ function ws_search(search_arr, userid)
 			propertyBox.append($("<div>").text("Capacity: " + ws.capacity));
 			propertyBox.append($("<div>").text("Amenities: " + ws.amenities));
 			let temp_str = "Avaliability: ";
+			
+			if (!ws.avaliability || ws.avaliability.length < 1)
+			{
+				temp_str += "Not avaliable";
+			}
+			else 
+			{
 				ws.avaliability.forEach( (wkday, index, arr) => {
 					temp_str+= arr_wk[wkday];
 					if (index < arr.length-1) {
 						temp_str += ", ";
 					}
 				});
+			}
 			
 			propertyBox.append($("<div>").text(temp_str));
-			propertyBox.append($(button_txt).val("ws" + ws.ID));
+			propertyBox.append($(button_txt).val("ws" + ws.id));
 			
 			$(".propertiesContainer").append(propertyBox);
+			
+			$(".button_to_book").click(function(){
+				//******** pass property ID from button
+				window.location.href='coworker_booking.html?book=' + $(this).val().slice(2) + '&userid=' + userid;
+			});	
+			
+			$(".button_to_login").click(function(){
+				//********save search terms
+				window.location.href='login.html?search=' + ($("#div_search").text()).slice(14);
+			});	
 
 		});
-		
 	}
+
 }
 
 	
-		function addPropertyBoxes() {
+function addPropertyBoxes() {
 		all_workspace.forEach(function(workspace) {
 			var propertyBox = $("<div>").addClass("propertyBox");
 			var title = $("<em>").text(workspace.title);
@@ -1024,3 +1158,29 @@ function ws_search(search_arr, userid)
 			propertyBox.children().wrapAll("<a href='login.html'></a>");
 		});
 	}
+
+function getWS( mycallback ) {
+	fetch(urlWS)
+		.then( res => res.json())
+		.then(data => {
+			all_workspace = Object.values(data);
+			mycallback();
+		});
+}
+
+function getWS2( mycallback, param1, param2 ) {
+	fetch(urlWS)
+		.then( res => res.json())
+		.then(data => {
+			all_workspace = Object.values(data);
+			mycallback(param1, param2 );
+		});
+}
+
+function get1WS ( mycallback, book_ID, param2) {
+	fetch(urlWS + '/' + book_ID )
+		.then( res => res.json())
+		.then(data => {
+			mycallback(Object.values(data)[0], param2 );
+		});
+}
