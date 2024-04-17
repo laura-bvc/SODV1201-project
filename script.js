@@ -991,6 +991,10 @@ $(document).ready(function(){
 	// ************* login functionality *************
 	else if ($("#loginButton").length) {
 		
+		getUser(login);
+		
+		function login() {
+		
 		$("#Login").validate({
 			rules: {
 				loginUsername: "required",
@@ -1001,6 +1005,7 @@ $(document).ready(function(){
 				loginPassword: "Please enter your password"
 			}
 		});
+		console.log(all_users_db);
 		
 	$("#loginButton").click(function(e) {
 		e.preventDefault();
@@ -1010,6 +1015,7 @@ $(document).ready(function(){
 		
 		if (isValid)
 		{
+			console.log(all_users_db);
 
 		// find user in all_users_db
 		var user = all_users_db.find(function(u){
@@ -1024,12 +1030,12 @@ $(document).ready(function(){
 			// redirect owner to their AllProperties page
 			if(user.userType === "owner")
 			{
-				window.location.href = "ownerAllProperties.html?userid=" + user.userID;
+				window.location.href = "ownerAllProperties.html?userid=" + user.userId;
 			}
 			// or redirect coworker to coworker_search page
 			else if(user.userType === "coworker")
 			{
-				window.location.href = "coworker_search.html?userid=" + user.userID + "&search=";
+				window.location.href = "coworker_search.html?search=&userid=" + user.userId;
 			}
 		}
 		else
@@ -1039,6 +1045,7 @@ $(document).ready(function(){
 		}
 			
 	})
+	}
 	}
 
 	
@@ -1267,5 +1274,14 @@ function get1User (mycallback, userID) {
 		.then(data => {
 			let arrUser = Object.values(data)[0];
 			mycallback(arrUser, userID);
+		});
+}
+
+function getUser (mycallback) {
+	fetch(urlUser)
+		.then( res => res.json())
+		.then(data => {
+			all_users_db = Object.values(data);
+			mycallback();
 		});
 }
