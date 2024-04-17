@@ -20,6 +20,7 @@
 const urlUser = "https://sodv1201-project-backend.onrender.com/user";
 const urlWS = "https://sodv1201-project-backend.onrender.com/workspace";
 const urlBk = "https://sodv1201-project-backend.onrender.com/booking";
+const urlLogin = "https://sodv1201-project-backend.onrender.com/login";
 
 
 var all_workspace = [
@@ -196,12 +197,13 @@ $(document).ready(function(){
 		const params = new URLSearchParams(window.location.search);
 		let user_ID = parseInt(params.get('userid'));
 		
+		get1User(disp_user,user_ID);
 		
-		if (!disp_user(user_ID))
+		if ($(".error").length)
 		{
-			$("#home_content").children().hide();
-			$("#home_content").prepend("<div><a href='login.html'>Login to book workspace</a></div>");
-			$("#home_content").prepend("<h3>You are not logged in</h3>");
+			//$("#home_content").children().hide();
+			//$("#home_content").prepend("<div><a href='login.html'>Login to book workspace</a></div>");
+			//$("#home_content").prepend("<h3>You are not logged in</h3>");
 		}
 		else if (params.get('search') == null)
 		{
@@ -229,14 +231,19 @@ $(document).ready(function(){
 		const params = new URLSearchParams(window.location.search);
 		let book_ID = parseInt(params.get('book'));
 		let user_ID = parseInt(params.get('userid'));
-
+		
+		get1User(disp_user, user_ID);
+		
+		/*
 		if (!disp_user(user_ID))
 		{
 			$("#home_content").children().hide();
 			$("#home_content").append("<h3>You are not logged in</h3>");
 			$("#home_content").append("<div><a href='login.html'>Login to book a workspace</a></div>");
 		}
-		else 
+		else
+		*/
+		if (!$(".error").length) 
 		{
 			get1WS(coworker_book, book_ID, user_ID);
 		}
@@ -264,12 +271,21 @@ $(document).ready(function(){
 		propertyBox.append($("<div>").text("Capacity: " + book_ws.capacity));
 		propertyBox.append($("<div>").text("Amenities: " + book_ws.amenities));
 		let temp_str = "Avaliability: ";
-			book_ws.availability.forEach( (wkday, index, arr) => {
-				temp_str += arr_wk[wkday];
-				if (index < arr.length-1) {
-					temp_str += ", ";
-				}
-			} ); 
+		
+		let myJS = JSON.parse(JSON.stringify(book_ws.availability));
+			if (!myJS || myJS.length < 1)
+			{
+				temp_str += "Not avaliable";
+			}
+			else 
+			{
+				myJS.forEach( (wkday, index, arr) => {
+					temp_str+= arr_wk[wkday];
+					if (index < arr.length-1) {
+						temp_str += ", ";
+					}
+				});
+			}
 		
 		propertyBox.append($("<div>").text(temp_str));
 		propertyBox.append($("<input type='date' id='book_date'> ") );
@@ -299,7 +315,8 @@ $(document).ready(function(){
 			if ( bk_date <= new Date() )
 				window.alert("You can only book a future date");
 			else {
-				book_ws.availability.forEach( ( wkday ) => {
+				let myJS = JSON.parse(JSON.stringify(book_ws.availability));
+				myJS.forEach( ( wkday ) => {
 					if (date_valid == false && wkday == bk_date.getUTCDay())
 					{
 						date_valid = true;
@@ -376,12 +393,16 @@ $(document).ready(function(){
 		let user_ID = parseInt(params.get('userid'));
 		let book_ws;
 		
+		get1User(disp_user, user_ID);
+		/*
 		if (!disp_user(user_ID))
 		{
 			$("#home_content").children().hide();
 			$("#home_content").prepend("<h3>You must login to edit or add workspace</h3>");
 		}
 		else {
+		*/
+		if (!$(".error").length) {
 			// can change to get one WS with modified owner_add
 			getWS2(owner_add, book_ID, user_ID);
 		}
@@ -464,19 +485,19 @@ $(document).ready(function(){
 					
 					
 					let temp_str='<input type="text" id="ed_ava" name="ed_ava" placeholder="Enter changes" size="60" value="';
-					
-					if(!book_ws.availability || (book_ws.availability.length <1) )
+					let myJS = JSON.parse(JSON.stringify(ws.availability));
+					if (!myJS || myJS.length < 1)
 					{
 						temp_str += "Not avaliable";
 					}
-					else
+					else 
 					{
-					book_ws.availability.forEach ( (wkday, index, arr) => {
-						temp_str+= arr_wk[wkday];
-						if (index < arr.length-1) {
+						myJS.forEach( (wkday, index, arr) => {
+							temp_str+= arr_wk[wkday];
+							if (index < arr.length-1) {
 							temp_str += ", ";
-						}
-					});
+							}
+						});
 					}
 					temp_str += '"><br>'
 					propertyBox.append(temp_str); //Avaliability
@@ -660,6 +681,37 @@ $(document).ready(function(){
 				"avaliability": [], //0=Sun, 1=Mon,..., 6=Sat
 				"bookings": []
 			};
+			
+			let temp_arr = $("#ed_ava").val().toLowerCase().split(/(?:,| )+/);
+			let bk_ava = [];
+			temp_arr.forEach( (wkday) => {
+				switch (wkday) 
+				{
+					case "sunday":
+						bk_ava.push(0);
+						break;
+					case "monday":
+						bk_ava.push(1);
+						break;
+					case "tuesday":
+						bk_ava.push(2);
+						break;
+					case "wednesday":
+						bk_ava.push(3);
+						break;
+					case "thursday":
+						bk_ava.push(4);
+						break;
+					case "friday":
+						bk_ava.push(5);
+						break;
+					case "saturday":
+						bk_ava.push(6);
+						break;
+					}
+				});
+			
+			
 			//all_workspace.push(book_ws);
 			fetch(urlWS, {
 					method: 'POST',
@@ -676,7 +728,8 @@ $(document).ready(function(){
 					parking: true,
 					publicTransport: true,
 					smoking: false,
-					availability: [2,3],
+					availability: bk_ava,
+					price: 75,
 					bookings: []
 				}),
 				headers: {
@@ -687,34 +740,6 @@ $(document).ready(function(){
 					.then(data => {
 						console.log(data);
 					});
-			
-			let temp_arr = $("#ed_ava").val().toLowerCase().split(/(?:,| )+/);
-			temp_arr.forEach( (wkday) => {
-				switch (wkday) 
-				{
-					case "sunday":
-						book_ws.avaliability.push(0);
-						break;
-					case "monday":
-						book_ws.avaliability.push(1);
-						break;
-					case "tuesday":
-						book_ws.avaliability.push(2);
-						break;
-					case "wednesday":
-						book_ws.avaliability.push(3);
-						break;
-					case "thursday":
-						book_ws.avaliability.push(4);
-						break;
-					case "friday":
-						book_ws.avaliability.push(5);
-						break;
-					case "saturday":
-						book_ws.avaliability.push(6);
-						break;
-					}
-				});
 				
 				window.alert("New workspace '" + book_ws.title +"' is added");
 				//window.alert("ws="+JSON.stringify(book_ws));
@@ -883,7 +908,7 @@ $(document).ready(function(){
 			phone = $("#cwPhone").val();
 			password = $("#coworkerSignupPassword").val();
 			
-			nextURL = "coworker_search.html?userid=" + userID + "&search=";
+			nextURL = "coworker_search.html?search=&userid=";
 			isValid = $("#cwSignup").valid();
 		}
 		else if(userType === 'owner' )
@@ -893,7 +918,7 @@ $(document).ready(function(){
 			phone = $("#ownerPhone").val();
 			password = $("#ownerSignupPassword").val();
 			
-			nextURL = "ownerAllProperties.html?userid=" + userID;
+			nextURL = "ownerAllProperties.html?userid=";
 			isValid = $("#ownSignup").valid();
 		}
 		
@@ -910,14 +935,46 @@ $(document).ready(function(){
 			password: password
 		});
 		
-		window.alert("User '" + username +"' signed up as " + userType + " sucessfully.");
-		window.location.href=nextURL;
+		fetch(urlUser, {
+			method: 'POST',
+			body: JSON.stringify({
+				userType: userType,
+				username: username,
+				password: password,
+				email: email,
+				phone: phone,
+			}),
+			headers: {
+				"Content-type": "application/json; charset=UTF-8"
+			}
+		})
+		.then( res => res.json())
+		.then(data => {
+			console.log(data);
+			nextURL +=data.userId;
+			
+		fetch(urlLogin, {
+			method: 'POST',
+			body: JSON.stringify({
+				username: username,
+				password: password
+			}),
+			headers: {
+				"Content-type": "application/json; charset=UTF-8"
+			}
+		})
+		.then( res => res.json())
+		.then(token => {
+			window.localStorage.setItem('token', token.accessToken);
+			console.log(token);
+		});
+			window.alert("User '" + username +"' signed up as " + userType + " sucessfully.");
+			window.location.href=nextURL;
+			
+		});
+		//window.alert("User '" + username +"' signed up as " + userType + " sucessfully.");
+		//window.location.href=nextURL;
 		}
-		else 
-		{
-			//window.alert("Input not valid");
-		}
-		
 	}
 	// function uses button click to determine 'coworker' or 'owner' userType
 	// and adds userType to database
@@ -993,13 +1050,18 @@ $(document).ready(function(){
 	const params = new URLSearchParams(window.location.search);
 	let user_ID = parseInt(params.get('userid'));
 	
+	get1User(disp_user, user_ID);
+	
+	if (!$(".error").length) {
+	/*
 	if (!disp_user(user_ID))
 	{
 		$(".propertiesContainer").prepend("<div><a href='login.html'>Login to see your workspaces</a></div>");
 		$(".propertiesContainer").prepend("<h3>You are not logged in</h3>");
 	}
 	else
-	{
+	{ */
+
 		getWS(addOwnerPropertyBoxes);
 	}
 		
@@ -1040,21 +1102,22 @@ $(document).ready(function(){
 
 });	
 
-function disp_user(userid) {
+function disp_user(arrUser, userid) {
 	// check and dispay user ID
 	// not verified user data because sign up data not stored between pages
 	
-	if(isNaN(userid) )
+	if(!arrUser )
 	{
 		$("#home_content").children().hide();
-		return false;
+		$("#home_content").prepend("<h3 class='error'>You are not logged in</h3>");
+		return;
 	}
-	$("#user").text("User ID: " + userid);
+	
+	$("#user").text("Hi, " + arrUser.username);
 	$(".drop_content").children().each( function() {
 		let temp_str = $(this).attr('href') + userid;
 		$(this).attr('href', temp_str);
 	});
-	return true;
 }
 
 function ws_search(search_arr, userid)
@@ -1113,13 +1176,14 @@ function ws_search(search_arr, userid)
 			propertyBox.append($("<div>").text("Amenities: " + ws.amenities));
 			let temp_str = "Avaliability: ";
 			
-			if (!ws.avaliability || ws.avaliability.length < 1)
+			let myJS = JSON.parse(JSON.stringify(ws.availability));
+			if (!myJS || myJS.length < 1)
 			{
 				temp_str += "Not avaliable";
 			}
 			else 
 			{
-				ws.avaliability.forEach( (wkday, index, arr) => {
+				myJS.forEach( (wkday, index, arr) => {
 					temp_str+= arr_wk[wkday];
 					if (index < arr.length-1) {
 						temp_str += ", ";
@@ -1195,5 +1259,13 @@ function get1WS ( mycallback, book_ID, param2) {
 		.then( res => res.json())
 		.then(data => {
 			mycallback(Object.values(data)[0], param2 );
+		});
+}
+function get1User (mycallback, userID) {
+	fetch(urlUser + '/' + userID  )
+		.then( res => res.json())
+		.then(data => {
+			let arrUser = Object.values(data)[0];
+			mycallback(arrUser, userID);
 		});
 }
