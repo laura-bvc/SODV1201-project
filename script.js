@@ -313,6 +313,8 @@ $(document).ready(function(){
 				// booking: workspace ID, coworker ID, date
 				//book_ws.bookings.push({"ws": book_ws.id, "user": user_ID, "date": bk_date.getUTCFullYear() + '-' + (bk_date.getUTCMonth()+1) + '-'+ bk_date.getUTCDate()} );
 				
+				let temp_bkid;
+				
 				//create & save a booking
 				fetch(urlBk, {
 					method: 'POST',
@@ -331,10 +333,14 @@ $(document).ready(function(){
 				})
 					.then( res => res.json())
 					.then(data => {
-						console.log(data.bookingId);
+						temp_bkid = data.bookingId;
+						console.log(temp_bkid);
+						// add bookingId to workspace
+						
+						
 					});
 				
-				// add bookingId to workspace
+				
 				
 				
 				//window.alert("Booking completed.\nInfo: "+JSON.stringify(book_ws.bookings[0] ) );
@@ -455,14 +461,17 @@ $(document).ready(function(){
 					propertyBox.append('<textarea rows="4" cols="60" id="ed_am" name="ed_am" placeholder="Enter changes">' + book_ws.amenities + '</textarea><br>');
 					
 					propertyBox.append('<br><label for="ed_ava">Avaliability: &nbsp;&nbsp;</label><br>');
+					
+					
 					let temp_str='<input type="text" id="ed_ava" name="ed_ava" placeholder="Enter changes" size="60" value="';
-					if ( !workspace.avaliability || workspace.avaliability.length <1)
+					
+					if(!book_ws.availability || (book_ws.availability.length <1) )
 					{
 						temp_str += "Not avaliable";
 					}
 					else
 					{
-					workspace.avaliability.forEach( (wkday, index, arr) => {
+					book_ws.availability.forEach ( (wkday, index, arr) => {
 						temp_str+= arr_wk[wkday];
 						if (index < arr.length-1) {
 							temp_str += ", ";
@@ -558,39 +567,42 @@ $(document).ready(function(){
 			
 			if (isValid)
 			{
+			/*
 			book_ws.title = $("#ed_title").val();
 			book_ws.location = $("#ed_loc").val();
 			book_ws.desc = $("#ed_desc").val();
 			book_ws.capacity = parseInt($("#ed_cap").val());
 			book_ws.amenities = $("#ed_am").val();
-				
+			*/	
 			let temp_arr = $("#ed_ava").val().toLowerCase().split(/(?:,| )+/);
+			let temp_ava =  [];
 			temp_arr.forEach( (wkday) => {
 				switch (wkday) 
 				{
 					case "sunday":
-						book_ws.avaliability.push(0);
+						temp_ava.push(0);
 						break;
 					case "monday":
-						book_ws.avaliability.push(1);
+						temp_ava.push(1);
 						break;
 					case "tuesday":
-						book_ws.avaliability.push(2);
+						temp_ava.push(2);
 						break;
 					case "wednesday":
-						book_ws.avaliability.push(3);
+						temp_ava.push(3);
 						break;
 					case "thursday":
-						book_ws.avaliability.push(4);
+						temp_ava.push(4);
 						break;
 					case "friday":
-						book_ws.avaliability.push(5);
+						temp_ava.push(5);
 						break;
 					case "saturday":
-						book_ws.avaliability.push(6);
+						temp_ava.push(6);
 						break;
 					}
 				});
+			
 			fetch(urlWS+'/'+book_ws.id, {
 					method: 'PUT',
 					body: JSON.stringify({
@@ -606,7 +618,8 @@ $(document).ready(function(){
 					parking: true,
 					publicTransport: true,
 					smoking: false,
-					availability: [2,3],
+					availability: temp_ava,
+					price: 75,
 					bookings: []
 				}),
 				headers: {
